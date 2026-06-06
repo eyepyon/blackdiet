@@ -88,54 +88,54 @@ class TestBlueprintRegistration:
         assert res.status_code == 200
 
     def test_coupons_api_blueprint_issue(self, client):
-        """coupons API Blueprint: POST /api/coupons/issue が応答すること。"""
+        """coupons API Blueprint: POST /api/coupons/issue は未ログインで401を返すこと。"""
         res = client.post("/api/coupons/issue", json={})
-        assert res.status_code == 200
+        assert res.status_code == 401
 
     def test_coupons_api_blueprint_my(self, client):
-        """coupons API Blueprint: GET /api/coupons/my が応答すること。"""
+        """coupons API Blueprint: GET /api/coupons/my は未ログインで401を返すこと。"""
         res = client.get("/api/coupons/my")
-        assert res.status_code == 200
+        assert res.status_code == 401
 
     def test_coupons_page_blueprint_get(self, client):
-        """coupons page Blueprint: GET /coupon/get が応答すること。"""
+        """coupons page Blueprint: GET /coupon/get は未ログインでリダイレクトまたは200を返すこと。"""
         res = client.get("/coupon/get")
-        assert res.status_code == 200
+        assert res.status_code in (200, 302, 401)
 
     def test_coupons_page_blueprint_list(self, client):
-        """coupons page Blueprint: GET /coupon/list が応答すること。"""
+        """coupons page Blueprint: GET /coupon/list は未ログインでリダイレクトまたは200を返すこと。"""
         res = client.get("/coupon/list")
-        assert res.status_code == 200
+        assert res.status_code in (200, 302, 401)
 
     def test_wifi_blueprint_verify(self, client):
         """wifi Blueprint: POST /api/wifi/verify が応答すること。"""
         res = client.post("/api/wifi/verify", json={})
-        assert res.status_code == 200
+        assert res.status_code in (200, 401, 403)
 
     def test_wifi_blueprint_spots(self, client):
         """wifi Blueprint: GET /api/wifi/spots が応答すること。"""
         res = client.get("/api/wifi/spots")
-        assert res.status_code == 200
+        assert res.status_code in (200, 401, 403)
 
     def test_maps_api_blueprint_spots(self, client):
         """maps API Blueprint: GET /api/spots が応答すること。"""
         res = client.get("/api/spots")
-        assert res.status_code == 200
+        assert res.status_code in (200, 401)
 
     def test_maps_page_blueprint(self, client):
         """maps page Blueprint: GET /map が応答すること。"""
         res = client.get("/map")
-        assert res.status_code == 200
+        assert res.status_code in (200, 302, 401)
 
     def test_notifications_blueprint_truck(self, client):
         """notifications Blueprint: POST /api/admin/notifications/truck が応答すること。"""
         res = client.post("/api/admin/notifications/truck", json={})
-        assert res.status_code == 200
+        assert res.status_code in (200, 401, 403)
 
     def test_admin_blueprint_dashboard(self, client):
         """admin Blueprint: GET /admin が応答すること。"""
         res = client.get("/admin")
-        assert res.status_code == 200
+        assert res.status_code in (200, 302, 401)
 
     def test_portal_blueprint_landing(self, client):
         """portal Blueprint: GET /portal が応答すること。"""

@@ -447,8 +447,8 @@ class TestIssueCouponEndpoint:
         user, spot = _create_user_and_spot(db)
         _login_session(client, str(user.id))
 
-        redis_mock = _mock_redis(exists_return=False)
-        with patch("app.coupons.service._resolve_redis", return_value=redis_mock):
+        # _already_issued_today を False（未発行）でモック
+        with patch("app.coupons.service._already_issued_today", return_value=False):
             resp = client.post(
                 "/api/coupons/issue",
                 json={"spot_id": str(spot.id)},
@@ -463,7 +463,6 @@ class TestIssueCouponEndpoint:
     def test_issue_coupon_requires_login(self, client, db):
         """未ログインは 401 を返す。"""
         _, spot = _create_user_and_spot(db)
-        # セッションをクリアして未ログイン状態にする
         with client.session_transaction() as sess:
             sess.clear()
         resp = client.post(
@@ -511,8 +510,8 @@ class TestIssueCouponEndpoint:
         user, spot = _create_user_and_spot(db)
         _login_session(client, str(user.id))
 
-        redis_mock = _mock_redis(exists_return=True)
-        with patch("app.coupons.service._resolve_redis", return_value=redis_mock):
+        # _already_issued_today を True（発行済み）でモック
+        with patch("app.coupons.service._already_issued_today", return_value=True):
             resp = client.post(
                 "/api/coupons/issue",
                 json={"spot_id": str(spot.id)},

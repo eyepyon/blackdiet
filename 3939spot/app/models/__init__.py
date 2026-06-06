@@ -1,9 +1,6 @@
 """
 SQLAlchemy モデルパッケージ。
 db インスタンスは app/__init__.py で初期化され、ここから再エクスポートする。
-
-使い方:
-    from app.models import db, User, Spot, Coupon, Session, PartnerApplication, AdminUser, AdTruckLocation
 """
 
 from app import db
@@ -14,6 +11,8 @@ from app.models.admin_user import AdminUser
 from app.models.session import Session
 from app.models.partner_application import PartnerApplication
 from app.models.ad_truck_location import AdTruckLocation
+from app.models.rate_limit import RateLimitLog
+from app.models.notification_log import NotificationLog
 
 __all__ = [
     "db",
@@ -24,4 +23,6 @@ __all__ = [
     "Session",
     "PartnerApplication",
     "AdTruckLocation",
+    "RateLimitLog",
+    "NotificationLog",
 ]

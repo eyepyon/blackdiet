@@ -190,24 +190,17 @@ class TestTouchSession:
 # ──────────────────────────────────────────
 
 class TestSessionConfig:
-    """Flask-Session の設定値テスト。"""
-
-    def test_session_key_prefix(self, session_app):
-        """SESSION_KEY_PREFIX が 'session:' に設定されていること（Redisキー設計準拠）。"""
-        assert session_app.config["SESSION_KEY_PREFIX"] == "session:"
-
-    def test_session_permanent_is_true(self, session_app):
-        """SESSION_PERMANENT が True であること（TTL 有効化）。"""
-        assert session_app.config["SESSION_PERMANENT"] is True
+    """Cookieセッションの設定値テスト（Redis不要・Flask標準Cookieセッション）。"""
 
     def test_permanent_session_lifetime_30_days(self, session_app):
         """PERMANENT_SESSION_LIFETIME が 30日（2592000秒）であること。"""
         expected = 60 * 60 * 24 * 30
         assert session_app.config["PERMANENT_SESSION_LIFETIME"] == expected
 
-    def test_session_use_signer(self, session_app):
-        """SESSION_USE_SIGNER が True であること（セッション署名有効）。"""
-        assert session_app.config["SESSION_USE_SIGNER"] is True
+    def test_secret_key_is_set(self, session_app):
+        """SECRET_KEY が設定されていること（Cookieセッション署名に必要）。"""
+        assert session_app.config.get("SECRET_KEY")
+        assert len(session_app.config["SECRET_KEY"]) > 0
 
 
 # ──────────────────────────────────────────

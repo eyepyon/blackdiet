@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>提携店マップ | 3939SPOT</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; }
+    #map { width: 100%; height: 100vh; }
+    #controls {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #controls input {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 14px;
+      width: 200px;
+    }
+    #controls select {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 14px;
+    }
+    #controls button {
+      background: #06C755;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #controls button:hover { background: #05a647; }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input type="text" id="keyword" placeholder="スポット名・エリアで検索" />
+    <select id="spot_type">
+      <option value="">すべての種別</option>
+      <option value="store">提携店</option>
+      <option value="ad_truck">ADトラック</option>
+      <option value="ship_truck">出荷トラック</option>
+      <option value="raspi">RasPiルーター</option>
+    </select>
+    <button onclick="searchSpots()">検索</button>
+  </div>
+
+  <div id="map"></div>
+
+  <script>
+    let map;
+    let markers = [];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 35.6812, lng: 139.7671 },  // 東京駅
+        zoom: 13,
+      });
+      loadSpots();
+    }
+
+    function clearMarkers() {
+      markers.forEach(m => m.setMap(null));
+      markers = [];
+    }
+
+    function loadSpots(keyword, spotType) {
+      let url = "/api/spots";
+      const params = new URLSearchParams();
+      if (keyword) params.append("keyword", keyword);
+      if (spotType) params.append("spot_type", spotType);
+      if (params.toString()) url += "?" + params.toString();
+
+      fetch(url)
+        .then(r => r.json())
+        .then(spots => {
+          clearMarkers();
+          spots.forEach(spot => {
+            if (spot.latitude == null || spot.longitude == null) return;
+            const marker = new google.maps.Marker({
+              position: { lat: spot.latitude, lng: spot.longitude },
+              map: map,
+              title: spot.name,
+            });
+            const infoContent = `
+              <div style="max-width:220px">
+                <strong>${escapeHtml(spot.name)}</strong><br/>
+                <small>${escapeHtml(spot.spot_type)}</small><br/>
+                ${spot.area ? '<small>📍 ' + escapeHtml(spot.area) + '</small><br/>' : ''}
+                ${spot.address ? '<small>' + escapeHtml(spot.address) + '</small><br/>' : ''}
+                ${spot.business_hours ? '<small>🕐 ' + escapeHtml(spot.business_hours) + '</small>' : ''}
+              </div>`;
+            const infoWindow = new google.maps.InfoWindow({ content: infoContent });
+            marker.addListener("click", () => infoWindow.open(map, marker));
+            markers.push(marker);
+          });
+        })
+        .catch(err => console.error("スポット取得エラー:", err));
+    }
+
+    function searchSpots() {
+      const keyword = document.getElementById("keyword").value.trim();
+      const spotType = document.getElementById("spot_type").value;
+      loadSpots(keyword, spotType);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+                .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+    }
+  </script>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"
+    async defer
+  ></script>
+</body>
+</html>

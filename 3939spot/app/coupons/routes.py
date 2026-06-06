@@ -140,7 +140,7 @@ def verify_coupon(coupon_id):
     )
 
     if coupon is None:
-        return jsonify({"valid": False, "error": "無効な交換券です"}), 200
+        return jsonify({"valid": False, "reason": "無効な交換券です"}), 200
 
     # 有効性チェック: status == 'active' かつ expires_at > now()
     now_jst = datetime.now(JST)
@@ -148,8 +148,14 @@ def verify_coupon(coupon_id):
     if expires_at is not None and expires_at.tzinfo is None:
         expires_at = expires_at.replace(tzinfo=JST)
 
-    if coupon.status != "active" or (expires_at is not None and expires_at <= now_jst):
-        return jsonify({"valid": False, "error": "無効な交換券です"}), 200
+    if coupon.status == "used":
+        return jsonify({"valid": False, "reason": "使用済みの交換券です"}), 200
+
+    if coupon.status == "expired" or (expires_at is not None and expires_at <= now_jst):
+        return jsonify({"valid": False, "reason": "期限切れの交換券です"}), 200
+
+    if coupon.status != "active":
+        return jsonify({"valid": False, "reason": "無効な交換券です"}), 200
 
     return jsonify({"valid": True, "coupon": coupon.to_dict()}), 200
 

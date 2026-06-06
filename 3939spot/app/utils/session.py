@@ -1,15 +1,17 @@
 """
 セッション操作ユーティリティ
 
-Flask-Session (Redis バックエンド) を使用したセッション管理ヘルパー。
-セッションキー設計: session:{session_id}  (SESSION_KEY_PREFIX="session:")
-TTL: 30日（最終アクセス時にリセット）
+Flask標準の署名付きCookieセッションを使用したセッション管理ヘルパー。
+Redis・Flask-Session不要。SECRET_KEY で署名されたCookieにデータを保存する。
+
+注意: Cookieに保存できるデータは4KB以内。機密データ（パスワード等）は保存しない。
+TTL: PERMANENT_SESSION_LIFETIME（30日）、最終アクセスごとにCookieが再発行される。
 """
 
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from flask import session
 
@@ -31,12 +33,10 @@ def get_current_user_id() -> str | None:
 
 
 def set_session_user(user_id: str, line_id: str) -> None:
-    """セッションにユーザー情報を設定し、TTL をリセットする。
+    """セッションにユーザー情報を設定する。
 
-    Flask-Session の ``SESSION_PERMANENT=True`` および
-    ``PERMANENT_SESSION_LIFETIME`` によって TTL が管理される。
-    本関数呼び出し時に ``session.modified = True`` をセットすることで
-    Flask-Session がセッションを書き直し、Redis の TTL がリセットされる。
+    Flask標準のCookieセッションに保存。PERMANENT_SESSION_LIFETIME（30日）が TTL。
+    session.permanent = True でブラウザを閉じてもCookieが残る。
 
     Args:
         user_id: データベース上のユーザー UUID 文字列。
@@ -51,10 +51,7 @@ def set_session_user(user_id: str, line_id: str) -> None:
 
 
 def clear_session() -> None:
-    """セッションをクリアする。
-
-    全てのセッションデータを削除し、Redis 上のセッションキーを無効化する。
-    """
+    """セッションをクリアする。"""
     session.clear()
     logger.debug("セッションをクリアしました。")
 
@@ -69,11 +66,10 @@ def is_logged_in() -> bool:
 
 
 def touch_session() -> None:
-    """セッションの最終アクセス時刻を更新して TTL をリセットする。
+    """セッションの最終アクセス時刻を更新してCookieの有効期限をリセットする。
 
     ログイン済みセッションが存在する場合のみ更新する。
-    ``session.modified = True`` を設定することで Flask-Session が
-    Redis のキーを書き直し、TTL（30日）がリセットされる。
+    session.modified = True でFlaskがCookieを再発行し、TTL（30日）がリセットされる。
     """
     if not is_logged_in():
         return
@@ -86,19 +82,9 @@ def touch_session() -> None:
 def get_session_expiry_info() -> dict | None:
     """セッションの有効期限情報を返す。
 
-    ログイン済みセッションの ``last_seen`` を基準に30日後の有効期限を計算して返す。
-    未ログインまたは ``last_seen`` が存在しない場合は None を返す。
-
     Returns:
         有効期限情報の辞書、またはセッションが存在しない場合は None。
-        辞書のキー:
-            - ``last_seen`` (datetime): 最終アクセス日時（UTC）
-            - ``expires_at`` (datetime): 有効期限（last_seen + 30日、UTC）
-            - ``remaining_seconds`` (int): 現在から有効期限までの残り秒数（非負）
-            - ``is_expired`` (bool): 有効期限が切れているかどうか
     """
-    from datetime import timedelta
-
     if not is_logged_in():
         return None
 
@@ -112,7 +98,6 @@ def get_session_expiry_info() -> dict | None:
         logger.warning("last_seen の解析に失敗しました: %s", last_seen_str)
         return None
 
-    # タイムゾーン情報がない場合は UTC として扱う
     if last_seen.tzinfo is None:
         last_seen = last_seen.replace(tzinfo=timezone.utc)
 

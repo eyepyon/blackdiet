@@ -34,22 +34,16 @@ class Config:
     SECRET_KEY: str = os.environ.get("SECRET_KEY", "change-me-in-production")
     JSON_AS_ASCII: bool = False  # 日本語をエスケープしない
 
+    # セッション: Flask標準の署名付きCookieセッション（Redis不要）
+    # ペイロードはサーバー側の SECRET_KEY で署名される。機密データは含めない。
+    PERMANENT_SESSION_LIFETIME: int = 60 * 60 * 24 * 30  # 30日（秒）
+
     # SQLAlchemy - SQLite使用（PostgreSQL不要）
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
         "DATABASE_URL", "sqlite:///3939spot.db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}  # SQLiteはプールオプション不要
-
-    # Flask-Session (Upstash Redis)
-    SESSION_TYPE: str = "redis"
-    SESSION_USE_SIGNER: bool = True
-    SESSION_KEY_PREFIX: str = "session:"
-    SESSION_PERMANENT: bool = True
-    PERMANENT_SESSION_LIFETIME: int = 60 * 60 * 24 * 30  # 30日（秒）
-
-    # Upstash Redis 接続設定（TLS必須: rediss://）
-    REDIS_URL: str = os.environ.get("REDIS_URL", "")
 
     # LINE Login API
     LINE_CHANNEL_ID: str = os.environ.get("LINE_CHANNEL_ID", "")
@@ -72,7 +66,6 @@ class DevelopmentConfig(Config):
     """開発環境設定。"""
 
     DEBUG: bool = True
-    SESSION_TYPE: str = "filesystem"  # Upstash不要でローカル動作可能にする
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
         "DATABASE_URL", "sqlite:///dev.db"
     )
@@ -83,7 +76,6 @@ class TestingConfig(Config):
 
     TESTING: bool = True
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
-    SESSION_TYPE: str = "filesystem"
     WTF_CSRF_ENABLED: bool = False
 
 
@@ -95,7 +87,6 @@ class ProductionConfig(Config):
     SESSION_COOKIE_HTTPONLY: bool = True
     SESSION_COOKIE_SAMESITE: str = "Lax"
     # Cloud Run の永続ボリュームにマウントしたパスを指定
-    # 例: /data/3939spot.db（Dockerfile/Cloud Run設定でマウント）
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
         "DATABASE_URL", "sqlite:////data/3939spot.db"
     )
@@ -198,33 +189,8 @@ def _init_extensions(app: Flask) -> None:
     # Flask-Migrate
     migrate.init_app(app, db)
 
-    # Flask-Session
-    # Upstash Redis接続をアプリコンテキストで設定
-    redis_url = app.config.get("REDIS_URL", "")
-    if app.config.get("SESSION_TYPE") == "redis" and redis_url:
-        try:
-            import redis as redis_lib
-
-            # Upstash は TLS必須（rediss://）。ssl_cert_reqs を指定して接続
-            r = redis_lib.from_url(redis_url, decode_responses=False)
-            app.config["SESSION_REDIS"] = r
-        except ImportError:
-            logger.warning(
-                "redis パッケージが見つかりません。SESSION_TYPE を filesystem に切り替えます。"
-            )
-            app.config["SESSION_TYPE"] = "filesystem"
-        except Exception as exc:
-            logger.warning(
-                "Redis 接続に失敗しました (%s)。SESSION_TYPE を filesystem に切り替えます。",
-                exc,
-            )
-            app.config["SESSION_TYPE"] = "filesystem"
-    elif app.config.get("SESSION_TYPE") == "redis" and not redis_url:
-        # REDIS_URL 未設定（ローカル開発など）はfilesystemにフォールバック
-        logger.info("REDIS_URL 未設定。SESSION_TYPE を filesystem に切り替えます。")
-        app.config["SESSION_TYPE"] = "filesystem"
-
-    sess.init_app(app)
+    # セッション: Flask標準のCookieセッションを使用（追加設定不要）
+    # セッションデータは SECRET_KEY で署名されたCookieに保存される
 
 
 def _register_blueprints(app: Flask) -> None:
