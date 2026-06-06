@@ -80,16 +80,16 @@
   - [x] 2.7 `AdTruckLocation`モデルの実装（`app/models/ad_truck_location.py`）
   - [x] 2.8 初期マイグレーションファイルの生成（Flask-Migrate）
 
-- [ ] 3. Auth_System（`app/auth/`）の実装
+- [x] 3. Auth_System（`app/auth/`）の実装
   - [x] 3.1 LINE Login APIを使ったOAuth 2.0認証フロー（`GET /auth/line/login`・`GET /auth/line/callback`）の実装
-  - [-] 3.2 セッション発行・Redis保存（TTL 30日・最終アクセスでリセット）の実装
-  - [~] 3.3 `@login_required`デコレーターの実装
-  - [~] 3.4 `POST /auth/logout`・`GET /auth/me`エンドポイントの実装
-  - [~] 3.5 LINE Messaging API Webhook（`POST /webhook/line`）の実装（follow/unfollow/blockイベント処理）
-  - [~] 3.6 Auth_Systemの単体テスト（`tests/test_auth.py`）の作成
+  - [x] 3.2 セッション発行・Redis保存（TTL 30日・最終アクセスでリセット）の実装
+  - [x] 3.3 `@login_required`デコレーターの実装
+  - [x] 3.4 `POST /auth/logout`・`GET /auth/me`エンドポイントの実装
+  - [x] 3.5 LINE Messaging API Webhook（`POST /webhook/line`）の実装（follow/unfollow/blockイベント処理）
+  - [x] 3.6 Auth_Systemの単体テスト（`tests/test_auth.py`）の作成
 
 - [ ] 4. Coupon_System（`app/coupons/`）の実装
-  - [~] 4.1 交換券発行ロジック（`issue_coupon`）の実装（JST日付・Redisによる重複チェック・DB保存）
+  - [-] 4.1 交換券発行ロジック（`issue_coupon`）の実装（JST日付・Redisによる重複チェック・DB保存）
   - [~] 4.2 `POST /api/coupons/issue`エンドポイントの実装
   - [~] 4.3 `GET /api/coupons/my`・`GET /api/coupons/<coupon_id>`エンドポイントの実装
   - [~] 4.4 交換券検証（`POST /api/coupons/<coupon_id>/verify`）の実装（有効期限・未使用確認）

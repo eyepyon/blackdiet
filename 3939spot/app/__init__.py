@@ -163,6 +163,22 @@ def create_app(config_name: str | None = None) -> Flask:
         """LPページをレンダリング。"""
         return render_template("index.html")
 
+    # ── テスト用保護エンドポイント（テスト環境のみ） ──
+    if app.config.get("TESTING"):
+        from app.utils.decorators import login_required
+
+        @app.route("/api/protected")
+        @login_required
+        def protected_api():
+            """テスト用保護APIエンドポイント。"""
+            return jsonify({"message": "ok"}), 200
+
+        @app.route("/protected/page")
+        @login_required
+        def protected_page():
+            """テスト用保護ページエンドポイント。"""
+            return "<h1>Protected</h1>", 200
+
     return app
 
 

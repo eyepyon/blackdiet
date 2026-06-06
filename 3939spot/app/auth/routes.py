@@ -9,6 +9,9 @@ Auth_System routes
 
 from __future__ import annotations
 
+import hashlib
+import hmac
+import base64
 import logging
 import secrets
 
@@ -185,5 +188,77 @@ def me():
 
 @webhook_bp.route("/webhook/line", methods=["POST"])
 def line_webhook():
-    """LINE Messaging API Webhook（stub）"""
-    return jsonify({"status": "stub", "endpoint": "POST /webhook/line"}), 200
+    """LINE Messaging API Webhook。
+
+    LINE から送信される follow / unfollow / block イベントを処理する。
+
+    署名検証:
+      - ``X-Line-Signature`` ヘッダーの HMAC-SHA256 署名を検証する。
+      - ``LINE_MESSAGING_CHANNEL_SECRET`` が空（テスト環境）の場合は検証をスキップ。
+      - 署名不一致の場合は 400 を返す。
+
+    イベント処理:
+      - ``follow``: line_id でユーザーを検索し ``is_active=True`` に更新（存在しなければ新規作成）。
+      - ``unfollow`` / ``block``: line_id でユーザーを検索し ``is_active=False`` に更新。
+      - その他のイベントは無視する。
+
+    Returns:
+        常に ``{"status": "ok"}`` を 200 で返す（LINE 仕様）。
+    """
+    channel_secret = current_app.config.get("LINE_MESSAGING_CHANNEL_SECRET", "")
+
+    # ── 署名検証 ──────────────────────────────
+    if channel_secret:
+        signature = request.headers.get("X-Line-Signature", "")
+        body = request.get_data()  # 生のリクエストボディ（bytes）
+        expected_sig = base64.b64encode(
+            hmac.new(
+                channel_secret.encode("utf-8"),
+                body,
+                hashlib.sha256,
+            ).digest()
+        ).decode("utf-8")
+
+        if not hmac.compare_digest(expected_sig, signature):
+            logger.warning("LINE Webhook 署名不一致: received=%r", signature)
+            abort(400)
+
+    # ── ペイロード解析 ────────────────────────
+    payload = request.get_json(silent=True) or {}
+    events = payload.get("events", [])
+
+    for event in events:
+        event_type = event.get("type")
+        source = event.get("source", {})
+        line_id = source.get("userId")
+
+        if not line_id:
+            logger.debug("LINE Webhook: userId なし、スキップ: type=%s", event_type)
+            continue
+
+        if event_type == "follow":
+            # ブロック解除 / 友だち追加 → is_active=True
+            user = User.query.filter_by(line_id=line_id).first()
+            if user is None:
+                user = User(line_id=line_id, is_active=True)
+                db.session.add(user)
+                logger.info("LINE follow: 新規ユーザー作成: line_id=%s", line_id)
+            else:
+                user.is_active = True
+                logger.info("LINE follow: ユーザー再アクティブ化: line_id=%s", line_id)
+            db.session.commit()
+
+        elif event_type in ("unfollow", "block"):
+            # ブロック / 退会 → is_active=False（通知停止）
+            user = User.query.filter_by(line_id=line_id).first()
+            if user is not None:
+                user.is_active = False
+                db.session.commit()
+                logger.info("LINE %s: ユーザー非アクティブ化: line_id=%s", event_type, line_id)
+            else:
+                logger.debug("LINE %s: 未登録ユーザー: line_id=%s", event_type, line_id)
+
+        else:
+            logger.debug("LINE Webhook: 未対応イベント type=%s、スキップ", event_type)
+
+    return jsonify({"status": "ok"}), 200
