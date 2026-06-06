@@ -1,23 +1,10 @@
 version: "3.9"
 
-services:
-  db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: spot3939
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d spot3939"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+# ローカル開発用 Docker Compose
+# DB: SQLite（ファイルベース、コンテナ不要）
+# Redis: ローカルRedis（開発用）または REDIS_URL 未設定でfilesystemセッションにフォールバック
 
+services:
   redis:
     image: redis:7-alpine
     ports:
@@ -34,8 +21,6 @@ services:
   web:
     build: .
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     ports:
@@ -44,8 +29,11 @@ services:
       - .env
     volumes:
       - .:/app
+      - sqlite_data:/data  # SQLiteファイルの永続化
+    environment:
+      DATABASE_URL: "sqlite:////data/dev.db"
     command: ["flask", "run", "--host=0.0.0.0", "--port=8080", "--reload"]
 
 volumes:
-  postgres_data:
   redis_data:
+  sqlite_data:

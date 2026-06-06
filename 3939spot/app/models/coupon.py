@@ -1,66 +1,25 @@
 """
 Coupon モデル（`coupons` テーブル）。
 
-unique_daily_spot 制約は PostgreSQL の date_trunc・timezone 関数を使った
-式インデックスに依存するため、SQLite（テスト環境）では関数式なしの
-UniqueConstraint(user_id, spot_id) をフォールバックとして使用する。
-JST 日付ベースの1日1枚制限はアプリ層（Coupon_System）で制御する。
+DBはSQLiteを使用。1日1枚制限（JST日付）はアプリ層（Coupon_System / Redis）で制御する。
+DB制約はシンプルな (user_id, spot_id) UniqueConstraintとstatusのCheckConstraintのみ。
 """
 
 from uuid import uuid4
 
-from sqlalchemy import CheckConstraint, UniqueConstraint, func, event
-from sqlalchemy.engine import Engine
+from sqlalchemy import CheckConstraint, UniqueConstraint, func
 
 from app import db
 from app.models.user import UUIDType
-
-
-# ──────────────────────────────────────────
-# Coupon モデル
-# ──────────────────────────────────────────
-
-def _build_table_args(dialect_name: str) -> tuple:
-    """
-    ダイアレクトに応じた __table_args__ を生成する。
-
-    - PostgreSQL: date_trunc + timezone 関数を用いた式ベースの UniqueConstraint
-    - SQLite（他）: シンプルな UniqueConstraint(user_id, spot_id) にフォールバック
-                    JST 日付の重複制御はアプリ層で補完する。
-    """
-    check = CheckConstraint(
-        "status IN ('active', 'used', 'expired')",
-        name="ck_coupons_status",
-    )
-    if dialect_name == "postgresql":
-        from sqlalchemy import cast
-        from sqlalchemy.types import Date
-        unique = UniqueConstraint(
-            "user_id",
-            "spot_id",
-            func.date_trunc("day", cast(func.timezone("Asia/Tokyo", "issued_at"), Date)),
-            name="unique_daily_spot",
-        )
-    else:
-        # SQLite など: 関数式インデックス非対応のため (user_id, spot_id) のみ
-        unique = UniqueConstraint(
-            "user_id",
-            "spot_id",
-            name="unique_daily_spot",
-        )
-    return (unique, check)
 
 
 class Coupon(db.Model):
     """交換券を表すモデル。"""
 
     __tablename__ = "coupons"
-
-    # __table_args__ はクラス定義時点では dialect が不明なため、
-    # 遅延評価ロジックを使う。テーブル作成前に _resolve_table_args() で確定する。
     __table_args__ = (
-        # デフォルトは SQLite フォールバック（テーブル作成前に上書きされる）
-        UniqueConstraint("user_id", "spot_id", name="unique_daily_spot"),
+        # 1日1枚制限はRedisとアプリ層で担保。DB制約はユーザー×スポットの重複防止のみ。
+        UniqueConstraint("user_id", "spot_id", name="unique_user_spot"),
         CheckConstraint(
             "status IN ('active', 'used', 'expired')",
             name="ck_coupons_status",

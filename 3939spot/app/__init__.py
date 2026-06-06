@@ -3,6 +3,9 @@
 
 create_app(config_name=None) でアプリインスタンスを生成する。
 Blueprints登録・設定管理・各種拡張の初期化・エラーハンドラーを担当する。
+
+セッション: Flask標準の署名付きCookieセッション（Redis・Flask-Session不要）
+DB: SQLite（PostgreSQL不要、Cloud Runの永続ボリュームにファイル保存）
 """
 
 import logging
@@ -10,7 +13,6 @@ import os
 
 from flask import Flask, jsonify, redirect, render_template, request
 from flask_migrate import Migrate
-from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 
 # ──────────────────────────────────────────
@@ -18,7 +20,6 @@ from flask_sqlalchemy import SQLAlchemy
 # ──────────────────────────────────────────
 db = SQLAlchemy()
 migrate = Migrate()
-sess = Session()
 
 logger = logging.getLogger(__name__)
 
@@ -33,27 +34,22 @@ class Config:
     SECRET_KEY: str = os.environ.get("SECRET_KEY", "change-me-in-production")
     JSON_AS_ASCII: bool = False  # 日本語をエスケープしない
 
-    # SQLAlchemy
+    # SQLAlchemy - SQLite使用（PostgreSQL不要）
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
-        "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/spot3939"
+        "DATABASE_URL", "sqlite:///3939spot.db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ENGINE_OPTIONS: dict = {
-        "pool_size": 5,
-        "max_overflow": 10,
-        "pool_pre_ping": True,
-    }
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {}  # SQLiteはプールオプション不要
 
-    # Flask-Session (Redis)
+    # Flask-Session (Upstash Redis)
     SESSION_TYPE: str = "redis"
     SESSION_USE_SIGNER: bool = True
     SESSION_KEY_PREFIX: str = "session:"
     SESSION_PERMANENT: bool = True
     PERMANENT_SESSION_LIFETIME: int = 60 * 60 * 24 * 30  # 30日（秒）
-    # SESSION_REDIS は create_app 内で redis.Redis インスタンスをセットする
 
-    # Redis 接続設定
-    REDIS_URL: str = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+    # Upstash Redis 接続設定（TLS必須: rediss://）
+    REDIS_URL: str = os.environ.get("REDIS_URL", "")
 
     # LINE Login API
     LINE_CHANNEL_ID: str = os.environ.get("LINE_CHANNEL_ID", "")
@@ -76,13 +72,10 @@ class DevelopmentConfig(Config):
     """開発環境設定。"""
 
     DEBUG: bool = True
-    SESSION_TYPE: str = "filesystem"  # Redis不要でローカル動作可能にする
-    # ローカルではDockerComposeのPostgreSQLを想定。環境変数未設定時はSQLiteにフォールバック
+    SESSION_TYPE: str = "filesystem"  # Upstash不要でローカル動作可能にする
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
         "DATABASE_URL", "sqlite:///dev.db"
     )
-    # SQLite使用時はプールオプション不要（StaticPool使用のため無効化）
-    SQLALCHEMY_ENGINE_OPTIONS: dict = {}
 
 
 class TestingConfig(Config):
@@ -92,20 +85,19 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SESSION_TYPE: str = "filesystem"
     WTF_CSRF_ENABLED: bool = False
-    # SQLite in-memoryではプールオプション不要
-    SQLALCHEMY_ENGINE_OPTIONS: dict = {}
 
 
 class ProductionConfig(Config):
-    """本番環境設定。"""
+    """本番環境設定（Cloud Run + SQLite永続ボリューム）。"""
 
     DEBUG: bool = False
     SESSION_COOKIE_SECURE: bool = True
     SESSION_COOKIE_HTTPONLY: bool = True
     SESSION_COOKIE_SAMESITE: str = "Lax"
-    # 本番では環境変数 DATABASE_URL が必須（未設定時はSQLiteにフォールバック）
+    # Cloud Run の永続ボリュームにマウントしたパスを指定
+    # 例: /data/3939spot.db（Dockerfile/Cloud Run設定でマウント）
     SQLALCHEMY_DATABASE_URI: str = os.environ.get(
-        "DATABASE_URL", "sqlite:///prod.db"
+        "DATABASE_URL", "sqlite:////data/3939spot.db"
     )
 
 
@@ -207,12 +199,14 @@ def _init_extensions(app: Flask) -> None:
     migrate.init_app(app, db)
 
     # Flask-Session
-    # Redis接続をアプリコンテキストで設定
-    if app.config.get("SESSION_TYPE") == "redis":
+    # Upstash Redis接続をアプリコンテキストで設定
+    redis_url = app.config.get("REDIS_URL", "")
+    if app.config.get("SESSION_TYPE") == "redis" and redis_url:
         try:
             import redis as redis_lib
 
-            r = redis_lib.from_url(app.config["REDIS_URL"])
+            # Upstash は TLS必須（rediss://）。ssl_cert_reqs を指定して接続
+            r = redis_lib.from_url(redis_url, decode_responses=False)
             app.config["SESSION_REDIS"] = r
         except ImportError:
             logger.warning(
@@ -225,6 +219,10 @@ def _init_extensions(app: Flask) -> None:
                 exc,
             )
             app.config["SESSION_TYPE"] = "filesystem"
+    elif app.config.get("SESSION_TYPE") == "redis" and not redis_url:
+        # REDIS_URL 未設定（ローカル開発など）はfilesystemにフォールバック
+        logger.info("REDIS_URL 未設定。SESSION_TYPE を filesystem に切り替えます。")
+        app.config["SESSION_TYPE"] = "filesystem"
 
     sess.init_app(app)
 
