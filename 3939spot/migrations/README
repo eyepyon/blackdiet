@@ -1,0 +1,13 @@
+Generic single-database configuration.
+
+このディレクトリは Flask-Migrate (Alembic) によるデータベースマイグレーション管理用です。
+
+初期化手順（PostgreSQL 接続設定後に実行）:
+    flask db init      # migrations/ ディレクトリを初期化（初回のみ）
+    flask db migrate   # マイグレーションスクリプト自動生成
+    flask db upgrade   # DBへスキーマ適用
+
+注意:
+- `flask db init` は本番 DB 接続が設定された環境で実行してください。
+- このファイルはプレースホルダーとして配置されています。
+- 実際の migrations/env.py, alembic.ini などは `flask db init` で生成されます。
