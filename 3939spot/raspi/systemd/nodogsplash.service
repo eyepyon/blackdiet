@@ -1,0 +1,29 @@
+# ============================================================
+# nodogsplash.service — 3939SPOT キャプティブポータル
+# 16.6: systemd サービスユニット（nodogsplash）
+# ============================================================
+
+[Unit]
+Description=3939SPOT Captive Portal Gateway (nodogsplash)
+Documentation=https://nodogsplash.readthedocs.io/
+# hostapd と dnsmasq が起動してから nodogsplash を起動
+After=network.target hostapd.service dnsmasq.service
+Wants=hostapd.service dnsmasq.service
+
+[Service]
+Type=forking
+PIDFile=/run/nodogsplash.pid
+ExecStart=/usr/bin/nodogsplash
+ExecStop=/usr/bin/ndsctl stop
+ExecReload=/usr/bin/ndsctl restart
+
+Restart=on-failure
+RestartSec=10s
+
+# ログ出力
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nodogsplash
+
+[Install]
+WantedBy=multi-user.target

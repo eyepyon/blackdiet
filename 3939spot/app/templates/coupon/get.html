@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交換券取得 - 3939SPOT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #fff; min-height: 100vh; }
+        header { background: #111; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        header a { color: #f5c518; text-decoration: none; font-size: 0.9rem; }
+        header h1 { font-size: 1.1rem; color: #f5c518; }
+        .container { max-width: 480px; margin: 40px auto; padding: 0 20px; }
+        .card { background: #2a2a2a; border-radius: 16px; padding: 32px; text-align: center; }
+        .spot-name { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; }
+        .spot-title { font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 32px; }
+        .qr-area { background: #fff; border-radius: 12px; width: 200px; height: 200px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; }
+        .qr-area img { width: 180px; height: 180px; }
+        .qr-placeholder { color: #333; font-size: 0.85rem; }
+        .coupon-code { font-size: 1.6rem; font-weight: 900; letter-spacing: 4px; color: #f5c518; margin-bottom: 8px; font-family: monospace; }
+        .coupon-label { font-size: 0.8rem; color: #888; margin-bottom: 24px; }
+        .expires { font-size: 0.85rem; color: #aaa; margin-bottom: 32px; }
+        .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .status-active { background: #1a4a1a; color: #4caf50; }
+        .status-used { background: #3a2a1a; color: #f5a623; }
+        .status-expired { background: #3a1a1a; color: #e53935; }
+        .already-issued { background: #2a2a0a; border: 1px solid #f5c518; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        .already-issued p { color: #f5c518; font-weight: 600; margin-bottom: 8px; }
+        .already-issued small { color: #aaa; font-size: 0.85rem; }
+        .issue-btn { display: block; width: 100%; padding: 16px; background: #f5c518; color: #1a1a1a; font-size: 1rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; text-decoration: none; margin-top: 24px; }
+        .issue-btn:hover { background: #e6b800; }
+        .issue-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+        .error-msg { color: #e53935; font-size: 0.9rem; margin-top: 16px; }
+        .nav-link { display: block; text-align: center; margin-top: 24px; color: #888; font-size: 0.85rem; text-decoration: none; }
+        .nav-link:hover { color: #f5c518; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">← トップ</a>
+        <h1>交換券取得</h1>
+    </header>
+
+    <div class="container">
+        {% if coupon %}
+        <!-- 発行済み / 既存の交換券表示 -->
+        <div class="card">
+            <div class="spot-name">取得スポット</div>
+            <div class="spot-title">{{ spot.name if spot else 'スポット不明' }}</div>
+
+            {% if coupon.coupon_code %}
+            <div class="qr-area">
+                {% if qr_image_url %}
+                <img src="{{ qr_image_url }}" alt="QRコード">
+                {% else %}
+                <div class="qr-placeholder">QRコード</div>
+                {% endif %}
+            </div>
+            <div class="coupon-code">{{ coupon.coupon_code }}</div>
+            <div class="coupon-label">交換券コード</div>
+            {% endif %}
+
+            {% if coupon.expires_at %}
+            <div class="expires">有効期限: {{ coupon.expires_at.strftime('%Y年%m月%d日') if coupon.expires_at else '-' }}</div>
+            {% endif %}
+
+            <span class="status-badge status-{{ coupon.status }}">
+                {% if coupon.status == 'active' %}有効{% elif coupon.status == 'used' %}使用済{% else %}期限切れ{% endif %}
+            </span>
+        </div>
+        {% elif already_issued %}
+        <!-- 本日発行済みメッセージ -->
+        <div class="card">
+            <div class="spot-name">スポット</div>
+            <div class="spot-title">{{ spot.name if spot else '' }}</div>
+            <div class="already-issued">
+                <p>🍫 本日の交換券は取得済みです</p>
+                <small>1日1枚の上限に達しています。明日またお試しください。</small>
+            </div>
+            <a href="/coupon/list" class="issue-btn" style="background:#555;color:#aaa;">保有交換券を見る</a>
+        </div>
+        {% else %}
+        <!-- 取得前：スポット情報表示→発行ボタン -->
+        <div class="card">
+            <div class="spot-name">WiFiスポット</div>
+            <div class="spot-title">{{ spot.name if spot else 'このスポット' }}</div>
+            <p style="color:#aaa;font-size:0.9rem;margin-bottom:24px;">このスポットでブラックサンダー交換券を取得できます。<br>1日1枚まで取得可能です。</p>
+            <button class="issue-btn" id="issue-btn" onclick="issueCoupon()">
+                🍫 交換券を取得する
+            </button>
+            <p class="error-msg" id="error-msg" style="display:none;"></p>
+        </div>
+        {% endif %}
+
+        <a href="/coupon/list" class="nav-link">保有交換券一覧を見る</a>
+    </div>
+
+    {% if not coupon and not already_issued %}
+    <script>
+        async function issueCoupon() {
+            const btn = document.getElementById('issue-btn');
+            const errMsg = document.getElementById('error-msg');
+            btn.disabled = true;
+            btn.textContent = '取得中...';
+            errMsg.style.display = 'none';
+
+            const spotId = new URLSearchParams(window.location.search).get('spot_id');
+            try {
+                const res = await fetch('/api/coupons/issue', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({spot_id: spotId})
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    errMsg.textContent = data.error || 'エラーが発生しました';
+                    errMsg.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = '🍫 交換券を取得する';
+                }
+            } catch (e) {
+                errMsg.textContent = '通信エラーが発生しました';
+                errMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = '🍫 交換券を取得する';
+            }
+        }
+    </script>
+    {% endif %}
+</body>
+</html>

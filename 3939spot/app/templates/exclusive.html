@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>限定コンテンツ - 3939SPOT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #fff; min-height: 100vh; }
+        header { background: #111; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        header a { color: #f5c518; text-decoration: none; font-size: 0.9rem; }
+        header h1 { font-size: 1.1rem; color: #f5c518; }
+        .badge-bar { background: linear-gradient(90deg, #f5c518 0%, #e6a800 100%); padding: 10px 20px; text-align: center; }
+        .badge-bar p { color: #1a1a1a; font-weight: 700; font-size: 0.9rem; }
+        .hero { text-align: center; padding: 48px 20px 32px; }
+        .hero .wifi-icon { font-size: 3rem; margin-bottom: 16px; }
+        .hero h2 { font-size: 1.8rem; font-weight: 900; color: #f5c518; margin-bottom: 12px; line-height: 1.3; }
+        .hero p { color: #aaa; font-size: 1rem; max-width: 480px; margin: 0 auto; }
+        .container { max-width: 640px; margin: 0 auto; padding: 0 20px 60px; }
+        .video-card { background: #2a2a2a; border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+        .video-placeholder { background: #111; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+        .video-placeholder .play-icon { width: 64px; height: 64px; background: rgba(245,197,24,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .video-placeholder .play-icon::after { content: '▶'; font-size: 1.5rem; color: #f5c518; margin-left: 4px; }
+        .video-placeholder p { color: #555; font-size: 0.85rem; }
+        .video-info { padding: 16px 20px; }
+        .video-info h3 { font-size: 1rem; color: #fff; margin-bottom: 6px; }
+        .video-info p { color: #888; font-size: 0.85rem; }
+        .video-tag { display: inline-block; background: #f5c518; color: #1a1a1a; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .content-item { background: #2a2a2a; border-radius: 12px; padding: 20px 16px; text-align: center; }
+        .content-item .icon { font-size: 2rem; margin-bottom: 8px; }
+        .content-item h4 { font-size: 0.9rem; color: #f5c518; margin-bottom: 4px; }
+        .content-item p { font-size: 0.8rem; color: #888; }
+        .cta-card { background: linear-gradient(135deg, #2a2a0a 0%, #1a1a1a 100%); border: 1px solid #f5c518; border-radius: 16px; padding: 28px; text-align: center; }
+        .cta-card h3 { color: #f5c518; font-size: 1.1rem; margin-bottom: 8px; }
+        .cta-card p { color: #aaa; font-size: 0.85rem; margin-bottom: 20px; }
+        .cta-btn { display: inline-block; padding: 12px 32px; background: #f5c518; color: #1a1a1a; font-weight: 700; border-radius: 50px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">← トップ</a>
+        <h1>限定コンテンツ</h1>
+    </header>
+
+    <div class="badge-bar">
+        <p>📡 WiFi接続中のあなただけに特別コンテンツを公開中！</p>
+    </div>
+
+    <div class="hero">
+        <div class="wifi-icon">📡</div>
+        <h2>WiFi接続中の<br>あなただけに！</h2>
+        <p>このスポットのWiFiに接続中のユーザー限定の特別コンテンツをお楽しみください。</p>
+    </div>
+
+    <div class="container">
+        <!-- メイン動画プレースホルダー -->
+        <div class="video-card">
+            <div class="video-placeholder">
+                <div class="play-icon"></div>
+                <p>限定動画（準備中）</p>
+            </div>
+            <div class="video-info">
+                <span class="video-tag">WiFi限定</span>
+                <h3>ブラックサンダー 製造ストーリー</h3>
+                <p>有楽製菓の工場で生まれるブラックサンダーの秘密に迫る特別映像</p>
+            </div>
+        </div>
+
+        <!-- コンテンツグリッド -->
+        <div class="content-grid">
+            <div class="content-item">
+                <div class="icon">🎬</div>
+                <h4>限定CM</h4>
+                <p>Web限定の特別動画が視聴できます</p>
+            </div>
+            <div class="content-item">
+                <div class="icon">🍫</div>
+                <h4>レシピ公開</h4>
+                <p>ブラックサンダーを使った限定レシピ</p>
+            </div>
+            <div class="content-item">
+                <div class="icon">🎁</div>
+                <h4>キャンペーン情報</h4>
+                <p>先行公開のキャンペーン情報</p>
+            </div>
+            <div class="content-item">
+                <div class="icon">📰</div>
+                <h4>最新ニュース</h4>
+                <p>新商品・コラボ情報をいち早く</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-card">
+            <h3>🍫 交換券もゲットしよう</h3>
+            <p>このスポットで交換券を取得して、ブラックサンダーと交換しよう！</p>
+            <a href="/coupon/list" class="cta-btn">交換券を確認する</a>
+        </div>
+    </div>
+</body>
+</html>

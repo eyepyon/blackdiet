@@ -1,0 +1,28 @@
+# ============================================================
+# hostapd.service — 3939SPOT キャプティブポータル
+# 16.6: systemd サービスユニット（hostapd）
+# ============================================================
+
+[Unit]
+Description=3939SPOT Wi-Fi Access Point (hostapd)
+Documentation=man:hostapd(8)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/hostapd.pid
+ExecStart=/usr/sbin/hostapd -B -P /run/hostapd.pid /etc/hostapd/hostapd.conf
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+
+Restart=on-failure
+RestartSec=5s
+
+# ログ出力
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=hostapd
+
+[Install]
+WantedBy=multi-user.target

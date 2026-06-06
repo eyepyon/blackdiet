@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交換券一覧 - 3939SPOT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #fff; min-height: 100vh; }
+        header { background: #111; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        header a { color: #f5c518; text-decoration: none; font-size: 0.9rem; }
+        header h1 { font-size: 1.1rem; color: #f5c518; }
+        .container { max-width: 600px; margin: 0 auto; padding: 24px 20px; }
+        h2 { font-size: 1.2rem; margin-bottom: 20px; color: #f5c518; }
+        .empty { text-align: center; padding: 60px 20px; color: #666; }
+        .empty p { margin-bottom: 16px; }
+        .empty a { color: #f5c518; text-decoration: none; }
+        .coupon-card { background: #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px; border-left: 4px solid #555; }
+        .coupon-card.active { border-left-color: #f5c518; }
+        .coupon-card.used { border-left-color: #888; opacity: 0.7; }
+        .coupon-card.expired { border-left-color: #e53935; opacity: 0.6; }
+        .coupon-icon { font-size: 2rem; flex-shrink: 0; }
+        .coupon-info { flex: 1; }
+        .coupon-code { font-size: 1.1rem; font-weight: 700; font-family: monospace; letter-spacing: 2px; color: #f5c518; margin-bottom: 4px; }
+        .coupon-code.used { color: #888; }
+        .coupon-code.expired { color: #666; }
+        .coupon-spot { font-size: 0.85rem; color: #aaa; margin-bottom: 4px; }
+        .coupon-expires { font-size: 0.8rem; color: #777; }
+        .coupon-expires.urgent { color: #f5a623; }
+        .status-badge { flex-shrink: 0; display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .badge-active { background: #1a4a1a; color: #4caf50; }
+        .badge-used { background: #333; color: #888; }
+        .badge-expired { background: #3a1a1a; color: #e53935; }
+        .summary { background: #222; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: flex; gap: 24px; }
+        .summary-item { text-align: center; }
+        .summary-num { font-size: 1.8rem; font-weight: 700; color: #f5c518; }
+        .summary-label { font-size: 0.75rem; color: #888; margin-top: 2px; }
+        .btn { display: inline-block; padding: 12px 28px; background: #f5c518; color: #1a1a1a; font-weight: 700; border-radius: 50px; text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">← トップ</a>
+        <h1>交換券一覧</h1>
+    </header>
+
+    <div class="container">
+        {% if coupons %}
+        <!-- 集計サマリー -->
+        <div class="summary">
+            <div class="summary-item">
+                <div class="summary-num">{{ coupons | selectattr('status', 'equalto', 'active') | list | length }}</div>
+                <div class="summary-label">有効</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-num">{{ coupons | selectattr('status', 'equalto', 'used') | list | length }}</div>
+                <div class="summary-label">使用済</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-num">{{ coupons | length }}</div>
+                <div class="summary-label">合計</div>
+            </div>
+        </div>
+
+        <h2>保有交換券</h2>
+
+        {% for c in coupons %}
+        <div class="coupon-card {{ c.status }}">
+            <div class="coupon-icon">
+                {% if c.status == 'active' %}🍫
+                {% elif c.status == 'used' %}✅
+                {% else %}⏰{% endif %}
+            </div>
+            <div class="coupon-info">
+                <div class="coupon-code {{ c.status }}">{{ c.coupon_code }}</div>
+                <div class="coupon-spot">
+                    {% if c.spot %}{{ c.spot.name }}{% else %}スポット情報なし{% endif %}
+                </div>
+                <div class="coupon-expires {% if c.days_left is defined and c.days_left is not none and c.days_left <= 3 %}urgent{% endif %}">
+                    {% if c.expires_at %}
+                    有効期限: {{ c.expires_at.strftime('%Y/%m/%d') if c.expires_at else '-' }}
+                    {% if c.status == 'active' and c.days_left is defined and c.days_left is not none %}
+                        (残{{ c.days_left }}日)
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <span class="status-badge badge-{{ c.status }}">
+                {% if c.status == 'active' %}有効
+                {% elif c.status == 'used' %}使用済
+                {% else %}期限切れ{% endif %}
+            </span>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="empty">
+            <p style="font-size:3rem;">🍫</p>
+            <p style="font-size:1.1rem;margin-bottom:8px;">交換券がありません</p>
+            <p style="color:#555;font-size:0.9rem;margin-bottom:24px;">提携WiFiスポットに接続して交換券を取得しましょう！</p>
+            <a href="/map" class="btn">近くのスポットを探す</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

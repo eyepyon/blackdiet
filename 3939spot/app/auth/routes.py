@@ -15,6 +15,8 @@ import base64
 import logging
 import secrets
 
+import requests as http_requests
+
 from flask import abort, current_app, jsonify, redirect, request, session, url_for
 
 from app import db
@@ -258,7 +260,66 @@ def line_webhook():
             else:
                 logger.debug("LINE %s: 未登録ユーザー: line_id=%s", event_type, line_id)
 
+        elif event_type == "message":
+            # テキストメッセージに応答
+            reply_token = event.get("replyToken")
+            msg_obj = event.get("message", {})
+            if msg_obj.get("type") != "text" or not reply_token:
+                continue
+
+            text = (msg_obj.get("text") or "").strip()
+            base_url = current_app.config.get("LINE_REDIRECT_URI", "").rsplit("/auth/", 1)[0]
+
+            if "提携店検索" in text or ("提携店" in text and "検索" in text) or text == "提携店":
+                reply_text = f"提携スポットマップはこちら：\n{base_url}/map"
+            elif "交換券" in text or "履歴" in text:
+                reply_text = f"交換券一覧はこちら：\n{base_url}/coupon/list"
+            else:
+                reply_text = f"3939SPOTへようこそ！\n{base_url}/"
+
+            _send_line_reply(reply_token, reply_text)
+            logger.debug("LINE message 応答: line_id=%s text=%r", line_id, text)
+
         else:
             logger.debug("LINE Webhook: 未対応イベント type=%s、スキップ", event_type)
-
     return jsonify({"status": "ok"}), 200
+
+
+# ──────────────────────────────────────────
+# LINE Messaging API ヘルパー
+# ──────────────────────────────────────────
+
+def _send_line_reply(reply_token: str, message: str) -> None:
+    """LINE Messaging API Reply でメッセージを送信する。
+
+    LINE_MESSAGING_CHANNEL_ACCESS_TOKEN が空ならスキップ。
+
+    Args:
+        reply_token: Webhook イベントの replyToken。
+        message: 送信するテキストメッセージ。
+    """
+    access_token = current_app.config.get("LINE_MESSAGING_CHANNEL_ACCESS_TOKEN", "")
+    if not access_token:
+        logger.debug("_send_line_reply: アクセストークン未設定、スキップ")
+        return
+
+    url = "https://api.line.me/v2/bot/message/reply"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+    }
+    body = {
+        "replyToken": reply_token,
+        "messages": [{"type": "text", "text": message}],
+    }
+
+    try:
+        resp = http_requests.post(url, json=body, headers=headers, timeout=5)
+        if not resp.ok:
+            logger.warning(
+                "_send_line_reply: 送信失敗 status=%s body=%s",
+                resp.status_code,
+                resp.text,
+            )
+    except Exception as exc:
+        logger.error("_send_line_reply: 例外発生: %s", exc)

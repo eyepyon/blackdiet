@@ -22,6 +22,8 @@ from app.models.spot import Spot
 from app.utils.decorators import login_required
 from app.utils.session import get_current_user_id
 
+JST = timezone(timedelta(hours=9))
+
 logger = logging.getLogger(__name__)
 
 JST = timezone(timedelta(hours=9))
@@ -206,16 +208,80 @@ def redeem_coupon(coupon_id):
 
 
 # ──────────────────────────────────────────
-# SSR ページ
+# SSR ページ（タスク 10.1 / 10.2）
 # ──────────────────────────────────────────
 
 @coupons_page_bp.route("/get")
+@login_required
 def coupon_get_page():
-    """交換券取得ページ（stub）"""
-    return jsonify({"status": "stub", "endpoint": "GET /coupon/get"}), 200
+    """交換券取得ページ。
+
+    クエリパラメータ:
+        spot_id (str): スポットUUID。指定がない場合はスポット情報なしで表示。
+
+    テンプレートに渡す変数:
+        spot        : Spot オブジェクト（該当があれば）
+        coupon      : 直近の有効な Coupon オブジェクト（既発行の場合）
+        already_issued: 発行済みフラグ（今日発行済み・複数ある場合）
+    """
+    user_id = get_current_user_id()
+    spot_id = request.args.get("spot_id")
+
+    spot = None
+    if spot_id:
+        spot = db.session.get(Spot, spot_id)
+
+    coupon = None
+    already_issued = False
+
+    if spot_id and user_id:
+        # 同スポットの交換券を取得（最新順）
+        existing = (
+            db.session.query(Coupon)
+            .filter_by(user_id=user_id, spot_id=spot_id)
+            .order_by(Coupon.issued_at.desc())
+            .first()
+        )
+        if existing:
+            coupon = existing
+            already_issued = True
+
+    return render_template(
+        "coupon/get.html",
+        spot=spot,
+        coupon=coupon,
+        already_issued=already_issued,
+    )
 
 
 @coupons_page_bp.route("/list")
+@login_required
 def coupon_list_page():
-    """交換券一覧ページ（stub）"""
-    return jsonify({"status": "stub", "endpoint": "GET /coupon/list"}), 200
+    """交換券一覧ページ。
+
+    現在ユーザーの保有交換券を取得し、テンプレートに渡す。
+    Coupon オブジェクトに spot と days_left を動的に付与する。
+    """
+    user_id = get_current_user_id()
+    coupons = (
+        db.session.query(Coupon)
+        .filter_by(user_id=user_id)
+        .order_by(Coupon.issued_at.desc())
+        .all()
+    )
+
+    now_jst = datetime.now(JST)
+    for c in coupons:
+        # spot をロード
+        c.spot = db.session.get(Spot, c.spot_id) if c.spot_id else None
+        # 残日数を計算
+        if c.expires_at and c.status == "active":
+            expires = c.expires_at
+            if expires.tzinfo is None:
+                expires = expires.replace(tzinfo=JST)
+            delta = expires - now_jst
+            c.days_left = max(0, delta.days)
+        else:
+            c.days_left = None
+
+    return render_template("coupon/list.html", coupons=coupons)

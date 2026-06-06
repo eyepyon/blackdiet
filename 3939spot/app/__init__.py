@@ -146,6 +146,60 @@ def create_app(config_name: str | None = None) -> Flask:
         """LPページをレンダリング。"""
         return render_template("index.html")
 
+    # ── 提携店募集ページ ─────────────────────
+    @app.route("/partner", methods=["GET", "POST"])
+    def partner():
+        """提携店申し込みページ。
+        GET: フォームを表示。
+        POST: PartnerApplication をDBに保存して完了メッセージを表示。
+        """
+        from app.models.partner_application import PartnerApplication
+
+        if request.method == "POST":
+            shop_name = (request.form.get("shop_name") or "").strip()
+            address = (request.form.get("address") or "").strip()
+            contact_name = (request.form.get("contact_name") or "").strip()
+            contact_email = (request.form.get("contact_email") or "").strip()
+            wifi_info = (request.form.get("wifi_info") or "").strip()
+
+            # 必須チェック
+            if not all([shop_name, address, contact_name, contact_email, wifi_info]):
+                form_data = {
+                    "shop_name": shop_name,
+                    "address": address,
+                    "contact_name": contact_name,
+                    "contact_email": contact_email,
+                    "wifi_info": wifi_info,
+                }
+                return render_template(
+                    "partner.html",
+                    error="すべての項目を入力してください。",
+                    form=form_data,
+                ), 400
+
+            application = PartnerApplication(
+                shop_name=shop_name,
+                address=address,
+                contact_name=contact_name,
+                contact_email=contact_email,
+                wifi_info=wifi_info,
+            )
+            db.session.add(application)
+            db.session.commit()
+            logger.info("提携店申し込み受付: shop_name=%s", shop_name)
+            return render_template("partner.html", success=True)
+
+        return render_template("partner.html")
+
+    # ── WiFi接続限定コンテンツ ───────────────
+    from app.utils.decorators import login_required as _login_required
+
+    @app.route("/exclusive")
+    @_login_required
+    def exclusive():
+        """WiFi接続限定コンテンツページ。"""
+        return render_template("exclusive.html")
+
     # ── テスト用保護エンドポイント（テスト環境のみ） ──
     if app.config.get("TESTING"):
         from app.utils.decorators import login_required
@@ -301,6 +355,18 @@ def _register_before_request(app: Flask) -> None:
             https_url = request.url.replace("http://", "https://", 1)
             return redirect(https_url, code=301)
 
+        return None
+
+    @app.before_request
+    def rate_limit_coupon_issue():
+        """
+        /api/coupons/issue エンドポイントへのIPレート制限。
+        5分間に10回超のリクエストで 429 を返す。
+        """
+        if request.path == "/api/coupons/issue":
+            from app.utils.rate_limit import check_rate_limit
+            if check_rate_limit():
+                return jsonify(error="しばらくお待ちください"), 429
         return None
 
     @app.before_request

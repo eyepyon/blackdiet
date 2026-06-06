@@ -1,0 +1,32 @@
+# ============================================================
+# dnsmasq.service — 3939SPOT キャプティブポータル
+# 16.6: systemd サービスユニット（dnsmasq）
+# ============================================================
+
+[Unit]
+Description=3939SPOT DHCP and DNS server (dnsmasq)
+Documentation=man:dnsmasq(8)
+# hostapd が起動してから dnsmasq を起動
+After=network.target hostapd.service
+Wants=hostapd.service
+
+[Service]
+Type=forking
+PIDFile=/run/dnsmasq/dnsmasq.pid
+ExecStartPre=/bin/mkdir -p /run/dnsmasq
+ExecStart=/usr/sbin/dnsmasq \
+    --conf-file=/etc/dnsmasq.conf \
+    --pid-file=/run/dnsmasq/dnsmasq.pid
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+
+Restart=on-failure
+RestartSec=5s
+
+# ログ出力
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dnsmasq
+
+[Install]
+WantedBy=multi-user.target

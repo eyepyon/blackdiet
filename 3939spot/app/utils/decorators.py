@@ -10,7 +10,7 @@ import functools
 import logging
 from typing import Callable
 
-from flask import jsonify, redirect, request, url_for
+from flask import jsonify, redirect, request, session, url_for
 
 from app.utils.session import is_logged_in
 
@@ -60,6 +60,44 @@ def login_required(f: Callable) -> Callable:
             login_url,
         )
         return redirect(login_url)
+
+    return decorated_function
+
+
+def admin_required(f: Callable) -> Callable:
+    """管理者認証済みユーザーのみアクセスを許可するデコレーター。
+
+    セッションに ``admin_user_id`` が存在し、かつ ``admin_mfa_verified`` が True の場合のみ通過。
+    いずれかが欠けている場合は 401 JSON を返す。
+
+    使用例::
+
+        @admin_bp.route("/dashboard")
+        @admin_required
+        def dashboard():
+            return jsonify({"status": "ok"})
+
+    Args:
+        f: デコレート対象のビュー関数。
+
+    Returns:
+        ラップされたビュー関数。
+    """
+
+    @functools.wraps(f)
+    def decorated_function(*args, **kwargs):
+        admin_user_id = session.get("admin_user_id")
+        mfa_verified = session.get("admin_mfa_verified", False)
+
+        if not admin_user_id:
+            logger.debug("admin_required: admin_user_id なし path=%s", request.path)
+            return jsonify({"error": "管理者ログインが必要です"}), 401
+
+        if not mfa_verified:
+            logger.debug("admin_required: MFA未認証 path=%s", request.path)
+            return jsonify({"error": "MFA認証が必要です"}), 401
+
+        return f(*args, **kwargs)
 
     return decorated_function
 
