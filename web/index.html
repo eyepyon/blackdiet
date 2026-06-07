@@ -45,28 +45,38 @@ DEFAULT:'8px',
 </div>
 <span class="font-['Pacifico'] text-2xl">logo</span>
 </div>
-<div class="flex items-center gap-8">
+<button id="nav-toggle" class="md:hidden flex items-center justify-center w-10 h-10" aria-label="メニュー">
+  <i class="ri-menu-line text-2xl"></i>
+</button>
+<div id="nav-menu" class="hidden md:flex items-center gap-8">
 <a href="#how-to-get" class="hover:text-secondary transition-colors">もらい方</a>
 <a href="#locations" class="hover:text-secondary transition-colors">受け取り場所</a>
 <a href="#for-business" class="hover:text-secondary transition-colors">施設運営者の方へ</a>
 <a href="#faq" class="hover:text-secondary transition-colors">よくある質問</a>
-<button class="bg-secondary text-primary px-6 py-2.5 !rounded-button font-bold hover:opacity-90 transition-opacity whitespace-nowrap">お問い合わせ</button>
+<button class="bg-secondary text-primary px-6 py-2.5 !rounded-button font-bold hover:opacity-90 transition-opacity">お問い合わせ</button>
 </div>
+</div>
+<div id="mobile-menu" class="hidden md:hidden bg-primary px-6 py-4 space-y-3">
+  <a href="#how-to-get" class="block hover:text-secondary transition-colors">もらい方</a>
+  <a href="#locations" class="block hover:text-secondary transition-colors">受け取り場所</a>
+  <a href="#for-business" class="block hover:text-secondary transition-colors">施設運営者の方へ</a>
+  <a href="#faq" class="block hover:text-secondary transition-colors">よくある質問</a>
+  <button class="bg-secondary text-primary px-6 py-2.5 !rounded-button font-bold hover:opacity-90 transition-opacity w-full">お問い合わせ</button>
 </div>
 </nav>
 
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
 <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent"></div>
-<div class="relative z-10 w-full max-w-7xl mx-auto px-6 py-24">
+<div class="relative z-10 w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
 <div class="max-w-2xl">
-<h1 class="text-6xl font-bold text-white mb-6 leading-tight">WiFi に接続するだけで<br><span class="text-secondary">ブラックサンダー</span>が<br>もらえる!</h1>
+<h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">WiFi に接続するだけで<br><span class="text-secondary">ブラックサンダー</span>が<br>もらえる!</h1>
 <p class="text-xl text-white/90 mb-8 leading-relaxed">QR コードをスキャンして WiFi に接続、LINE アカウントを連携するだけ。全国の WiFi スポットと AD トラックで無料チョコをゲットしよう!</p>
-<div class="flex gap-4">
-<button class="bg-secondary text-primary px-8 py-4 !rounded-button font-bold text-lg hover:opacity-90 transition-opacity whitespace-nowrap flex items-center gap-2">
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-secondary text-primary px-8 py-4 !rounded-button font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
 <i class="ri-map-pin-line text-xl"></i>
 近くのスポットを探す
 </button>
-<button class="bg-white/10 backdrop-blur-sm text-white border-2 border-white px-8 py-4 !rounded-button font-bold text-lg hover:bg-white/20 transition-colors whitespace-nowrap">
+<button class="bg-white/10 backdrop-blur-sm text-white border-2 border-white px-8 py-4 !rounded-button font-bold text-lg hover:bg-white/20 transition-colors">
 詳しく見る
 </button>
 </div>
@@ -74,19 +84,19 @@ DEFAULT:'8px',
 </div>
 </section>
 
-<section id="how-to-get" class="py-24 px-6 bg-gradient-to-b from-white to-gray-50">
+<section id="how-to-get" class="py-16 md:py-24 px-6 bg-gradient-to-b from-white to-gray-50">
 <div class="max-w-7xl mx-auto">
 <div class="text-center mb-16">
-<h2 class="text-5xl font-bold text-primary mb-4">もらい方はカンタン 3 ステップ</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">もらい方はカンタン 3 ステップ</h2>
 <p class="text-xl text-gray-600">誰でも簡単にブラックサンダーがもらえます</p>
 </div>
-<div class="grid grid-cols-3 gap-12">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
 <div class="text-center">
 <div class="w-32 h-32 bg-gradient-to-br from-secondary to-yellow-600 rounded-full mx-auto mb-6 flex items-center justify-center">
 <i class="ri-qr-scan-2-line text-6xl text-white"></i>
 </div>
 <div class="bg-secondary text-primary w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center font-bold text-xl">1</div>
-<h3 class="text-2xl font-bold text-primary mb-3">QR コードをスキャン</h3>
+<h3 class="text-lg md:text-2xl font-bold text-primary mb-3">QR コードをスキャン</h3>
 <p class="text-gray-600 leading-relaxed">WiFi スポットまたは AD トラックに設置された QR コードをスマホで読み取ります</p>
 </div>
 <div class="text-center">
@@ -94,7 +104,7 @@ DEFAULT:'8px',
 <i class="ri-wifi-line text-6xl text-white"></i>
 </div>
 <div class="bg-secondary text-primary w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center font-bold text-xl">2</div>
-<h3 class="text-2xl font-bold text-primary mb-3">WiFi に接続</h3>
+<h3 class="text-lg md:text-2xl font-bold text-primary mb-3">WiFi に接続</h3>
 <p class="text-gray-600 leading-relaxed">専用の無料 WiFi ネットワークに接続します。設定は自動で完了します</p>
 </div>
 <div class="text-center">
@@ -102,44 +112,44 @@ DEFAULT:'8px',
 <i class="ri-line-fill text-6xl text-white"></i>
 </div>
 <div class="bg-secondary text-primary w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center font-bold text-xl">3</div>
-<h3 class="text-2xl font-bold text-primary mb-3">LINE アカウント連携</h3>
+<h3 class="text-lg md:text-2xl font-bold text-primary mb-3">LINE アカウント連携</h3>
 <p class="text-gray-600 leading-relaxed">LINE アカウントを連携すると、その場でブラックサンダー引換クーポンが届きます</p>
 </div>
 </div>
 </div>
 </section>
 
-<section id="locations" class="py-24 px-6 bg-white">
+<section id="locations" class="py-16 md:py-24 px-6 bg-white">
 <div class="max-w-7xl mx-auto">
 <div class="text-center mb-16">
-<h2 class="text-5xl font-bold text-primary mb-4">2 つの受け取り方法</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">2 つの受け取り方法</h2>
 <p class="text-xl text-gray-600">お好きな方法でブラックサンダーをゲット!</p>
 </div>
-<div class="grid grid-cols-2 gap-8">
-<div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-10 border-2 border-gray-100 hover:border-secondary transition-colors">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 md:p-10 border-2 border-gray-100 hover:border-secondary transition-colors">
 <div class="w-20 h-20 bg-primary rounded-xl flex items-center justify-center mb-6">
 <i class="ri-store-3-line text-4xl text-secondary"></i>
 </div>
-<h3 class="text-3xl font-bold text-primary mb-4">施設で受け取る</h3>
+<h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-primary mb-4">施設で受け取る</h3>
 <p class="text-gray-600 mb-6 leading-relaxed">全国の提携店舗・施設に設置された WiFi スポットで受け取れます。カフェ、ショッピングモール、駅構内など、様々な場所でご利用いただけます。</p>
-<div class="relative h-64 rounded-xl overflow-hidden mb-6">
+<div class="relative h-64 md:h-64 rounded-xl overflow-hidden mb-6">
 <img src="./img/location-cafe.jpg" alt="WiFi スポット" width="800" height="600" class="w-full h-full object-cover object-top">
 </div>
-<button class="w-full bg-primary text-white px-6 py-4 !rounded-button font-bold hover:bg-gray-800 transition-colors whitespace-nowrap flex items-center justify-center gap-2">
+<button class="w-full bg-primary text-white px-6 py-4 !rounded-button font-bold hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
 <i class="ri-map-pin-2-line text-xl"></i>
 近くのスポットを検索
 </button>
 </div>
-<div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-10 border-2 border-gray-100 hover:border-secondary transition-colors">
+<div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 md:p-10 border-2 border-gray-100 hover:border-secondary transition-colors">
 <div class="w-20 h-20 bg-primary rounded-xl flex items-center justify-center mb-6">
 <i class="ri-truck-line text-4xl text-secondary"></i>
 </div>
-<h3 class="text-3xl font-bold text-primary mb-4">AD トラックで受け取る</h3>
+<h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-primary mb-4">AD トラックで受け取る</h3>
 <p class="text-gray-600 mb-6 leading-relaxed">日本全国を巡回している AD トラックでも受け取り可能。トラックに記載された QR コードを読み取るだけで、施設に行くのと同じようにチョコがもらえます。</p>
-<div class="relative h-64 rounded-xl overflow-hidden mb-6">
+<div class="relative h-64 md:h-64 rounded-xl overflow-hidden mb-6">
 <img src="./img/location-truck.jpg" alt="AD トラック" width="800" height="600" class="w-full h-full object-cover object-top">
 </div>
-<button class="w-full bg-primary text-white px-6 py-4 !rounded-button font-bold hover:bg-gray-800 transition-colors whitespace-nowrap flex items-center justify-center gap-2">
+<button class="w-full bg-primary text-white px-6 py-4 !rounded-button font-bold hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
 <i class="ri-map-2-line text-xl"></i>
 トラックの現在地を確認
 </button>
@@ -148,39 +158,39 @@ DEFAULT:'8px',
 </div>
 </section>
 
-<section id="for-business" class="py-24 px-6 bg-gradient-to-br from-primary to-gray-900 text-white">
+<section id="for-business" class="py-16 md:py-24 px-6 bg-gradient-to-br from-primary to-gray-900 text-white">
 <div class="max-w-7xl mx-auto">
 <div class="text-center mb-16">
-<h2 class="text-5xl font-bold mb-4">施設運営者の皆様へ</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4">施設運営者の皆様へ</h2>
 <p class="text-xl text-white/80">このサービスに参画することで、大きなメリットが得られます</p>
 </div>
-<div class="grid grid-cols-3 gap-8 mb-12">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
 <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
 <div class="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center mb-6">
 <i class="ri-group-line text-3xl text-primary"></i>
 </div>
-<h3 class="text-2xl font-bold mb-4">集客力アップ</h3>
+<h3 class="text-lg md:text-2xl font-bold mb-4">集客力アップ</h3>
 <p class="text-white/80 leading-relaxed">無料チョコという魅力的なインセンティブで、新規顧客の来店を促進。リピート率の向上にも貢献します。</p>
 </div>
 <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
 <div class="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center mb-6">
 <i class="ri-megaphone-line text-3xl text-primary"></i>
 </div>
-<h3 class="text-2xl font-bold mb-4">話題性の創出</h3>
+<h3 class="text-lg md:text-2xl font-bold mb-4">話題性の創出</h3>
 <p class="text-white/80 leading-relaxed">SNS でのシェアや口コミを通じて、施設の認知度が大幅に向上。プロモーション効果が期待できます。</p>
 </div>
 <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
 <div class="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center mb-6">
 <i class="ri-database-2-line text-3xl text-primary"></i>
 </div>
-<h3 class="text-2xl font-bold mb-4">顧客データの取得</h3>
+<h3 class="text-lg md:text-2xl font-bold mb-4">顧客データの取得</h3>
 <p class="text-white/80 leading-relaxed">LINE 連携を通じて、貴重な顧客データを収集。マーケティング施策の最適化に活用できます。</p>
 </div>
 </div>
-<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/20">
-<div class="grid grid-cols-2 gap-12 items-center">
+<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 md:p-12 border border-white/20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 <div>
-<h3 class="text-3xl font-bold mb-6">導入費用は完全無料</h3>
+<h3 class="text-xl md:text-2xl lg:text-3xl font-bold mb-6">導入費用は完全無料</h3>
 <p class="text-white/80 mb-6 leading-relaxed text-lg">初期費用・月額費用は一切かかりません。QR コードステッカーの設置のみで、すぐにサービスを開始できます。専用の管理画面で、来店データやクーポン利用状況をリアルタイムで確認できます。</p>
 <ul class="space-y-3 mb-8">
 <li class="flex items-center gap-3">
@@ -200,9 +210,9 @@ DEFAULT:'8px',
 <span class="text-white/90">プロモーション素材提供</span>
 </li>
 </ul>
-<button class="bg-secondary text-primary px-8 py-4 !rounded-button font-bold text-lg hover:opacity-90 transition-opacity whitespace-nowrap">サービス導入のお問い合わせ</button>
+<button class="bg-secondary text-primary px-6 py-3 md:px-8 md:py-4 !rounded-button font-bold text-lg hover:opacity-90 transition-opacity">サービス導入のお問い合わせ</button>
 </div>
-<div class="relative h-96 rounded-2xl overflow-hidden">
+<div class="relative h-64 md:h-96 rounded-2xl overflow-hidden">
 <img src="./img/business-meeting.jpg" alt="導入イメージ" width="700" height="900" class="w-full h-full object-cover object-top">
 </div>
 </div>
@@ -210,14 +220,14 @@ DEFAULT:'8px',
 </div>
 </section>
 
-<section class="py-24 px-6 bg-gray-50">
+<section class="py-16 md:py-24 px-6 bg-gray-50">
 <div class="max-w-7xl mx-auto">
 <div class="text-center mb-16">
-<h2 class="text-5xl font-bold text-primary mb-4">AD トラック運行情報</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">AD トラック運行情報</h2>
 <p class="text-xl text-gray-600">全国を巡回中! お近くに来たらチェックしよう</p>
 </div>
 <div class="bg-white rounded-2xl p-8 shadow-lg">
-<div class="relative h-96 rounded-xl overflow-hidden mb-8" style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;">
+<div class="relative h-64 md:h-96 rounded-xl overflow-hidden mb-8" style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;">
 <div class="absolute top-4 left-4 bg-white rounded-lg px-4 py-2 shadow-lg">
 <div class="flex items-center gap-2">
 <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -228,14 +238,14 @@ DEFAULT:'8px',
 <h4 class="font-bold text-primary mb-2">現在の運行エリア</h4>
 <p class="text-sm text-gray-600 mb-3">東京都渋谷区周辺を巡回中</p>
 <div class="flex gap-2">
-<button class="flex-1 bg-primary text-white px-4 py-2 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
-<button class="w-10 h-10 bg-gray-100 rounded-button flex items-center justify-center hover:bg-gray-200 transition-colors">
+<button class="flex-1 bg-primary text-white px-4 py-2 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors">詳細を見る</button>
+<button class="w-10 h-10 bg-gray-100 rounded-button flex items-center justify-center hover:bg-gray-200 transition-colors" aria-label="シェア">
 <i class="ri-share-line text-lg text-primary"></i>
 </button>
 </div>
 </div>
 </div>
-<div class="grid grid-cols-4 gap-6">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
 <div class="text-center p-6 bg-gray-50 rounded-xl">
 <div class="text-3xl font-bold text-primary mb-2">12/15</div>
 <div class="text-sm text-gray-600 mb-1">東京都</div>
@@ -261,10 +271,10 @@ DEFAULT:'8px',
 </div>
 </section>
 
-<section id="faq" class="py-24 px-6 bg-white">
+<section id="faq" class="py-16 md:py-24 px-6 bg-white">
 <div class="max-w-4xl mx-auto">
 <div class="text-center mb-16">
-<h2 class="text-5xl font-bold text-primary mb-4">よくある質問</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">よくある質問</h2>
 <p class="text-xl text-gray-600">サービスについての疑問にお答えします</p>
 </div>
 <div class="space-y-4">
@@ -326,23 +336,23 @@ DEFAULT:'8px',
 </div>
 </section>
 
-<section class="py-24 px-6 bg-gradient-to-br from-secondary to-yellow-600 text-primary">
+<section class="py-16 md:py-24 px-6 bg-gradient-to-br from-secondary to-yellow-600 text-primary">
 <div class="max-w-7xl mx-auto">
-<div class="grid grid-cols-2 gap-16 items-center">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 <div>
-<h2 class="text-5xl font-bold mb-6">今すぐブラックサンダーを<br>ゲットしよう!</h2>
+<h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-6">今すぐブラックサンダーを<br>ゲットしよう!</h2>
 <p class="text-xl mb-8 leading-relaxed opacity-90">お近くの WiFi スポットまたは AD トラックで、無料でブラックサンダーがもらえます。QR コードをスキャンして、今すぐ始めましょう!</p>
-<div class="flex gap-4">
-<button class="bg-primary text-white px-8 py-4 !rounded-button font-bold text-lg hover:bg-gray-800 transition-colors whitespace-nowrap flex items-center gap-2">
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-white px-6 py-3 md:px-8 md:py-4 !rounded-button font-bold text-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
 <i class="ri-map-pin-line text-xl"></i>
 近くのスポットを探す
 </button>
-<button class="bg-white text-primary px-8 py-4 !rounded-button font-bold text-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
+<button class="bg-white text-primary px-6 py-3 md:px-8 md:py-4 !rounded-button font-bold text-lg hover:bg-gray-100 transition-colors">
 導入のご相談
 </button>
 </div>
 </div>
-<div class="relative h-96">
+<div class="relative h-64 md:h-96">
 <img src="./img/cta-product.jpg" alt="ブラックサンダー" width="700" height="900" class="w-full h-full object-contain object-center">
 </div>
 </div>
@@ -351,7 +361,7 @@ DEFAULT:'8px',
 
 <footer class="bg-primary text-white py-16 px-6">
 <div class="max-w-7xl mx-auto">
-<div class="grid grid-cols-4 gap-12 mb-12">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
 <div>
 <div class="flex items-center gap-3 mb-6">
 <div class="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
@@ -373,7 +383,7 @@ DEFAULT:'8px',
 <div>
 <h4 class="font-bold mb-4">施設運営者向け</h4>
 <ul class="space-y-2 text-sm">
-<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">導入のご案内</a></li>
+<li><a href="service.html" class="text-white/70 hover:text-secondary transition-colors">導入のご案内</a></li>
 <li><a href="#" class="text-white/70 hover:text-secondary transition-colors">導入事例</a></li>
 <li><a href="#" class="text-white/70 hover:text-secondary transition-colors">管理画面ログイン</a></li>
 <li><a href="#" class="text-white/70 hover:text-secondary transition-colors">お問い合わせ</a></li>
@@ -383,26 +393,26 @@ DEFAULT:'8px',
 <h4 class="font-bold mb-4">企業情報</h4>
 <ul class="space-y-2 text-sm">
 <li><a href="#" class="text-white/70 hover:text-secondary transition-colors">会社概要</a></li>
-<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">利用規約</a></li>
-<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">プライバシーポリシー</a></li>
+<li><a href="kiyaku.html" class="text-white/70 hover:text-secondary transition-colors">利用規約</a></li>
+<li><a href="privacy.html" class="text-white/70 hover:text-secondary transition-colors">プライバシーポリシー</a></li>
 <li><a href="#" class="text-white/70 hover:text-secondary transition-colors">お問い合わせ</a></li>
 </ul>
 </div>
 </div>
 <div class="border-t border-white/10 pt-8">
-<div class="flex items-center justify-between">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
 <p class="text-white/50 text-sm">&copy; 2026 ブラックサンダー無料 WiFi. All rights reserved.</p>
 <div class="flex items-center gap-4">
-<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors" aria-label="Twitter/X">
 <i class="ri-twitter-x-line text-lg"></i>
 </a>
-<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors" aria-label="Facebook">
 <i class="ri-facebook-fill text-lg"></i>
 </a>
-<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors" aria-label="Instagram">
 <i class="ri-instagram-line text-lg"></i>
 </a>
-<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors" aria-label="LINE">
 <i class="ri-line-fill text-lg"></i>
 </a>
 </div>
@@ -430,6 +440,10 @@ content.classList.remove('hidden');
 icon.classList.add('rotate-180');
 }
 });
+});
+
+document.getElementById('nav-toggle').addEventListener('click', function() {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
 });
 });
 </script>

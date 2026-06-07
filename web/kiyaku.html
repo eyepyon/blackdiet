@@ -45,18 +45,26 @@ tailwind.config = {
       </div>
       <span class="font-['Pacifico'] text-2xl text-primary">logo</span>
     </a>
-    <div class="flex items-center gap-8">
+    <button id="nav-toggle" class="md:hidden flex items-center justify-center w-10 h-10" aria-label="メニュー">
+      <i class="ri-menu-line text-2xl"></i>
+    </button>
+    <div id="nav-menu" class="hidden md:flex items-center gap-8">
       <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="hover:text-primary transition-colors flex items-center gap-2">
         <i class="ri-home-line"></i>
         ホームに戻る
       </a>
     </div>
   </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-secondary px-6 py-4 space-y-3">
+    <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="block hover:text-primary transition-colors">
+      <i class="ri-home-line mr-2"></i>ホームに戻る
+    </a>
+  </div>
 </nav>
 
 <section class="py-16 bg-gradient-to-b from-gray-50 to-white">
   <div class="max-w-5xl mx-auto px-6 text-center">
-    <h1 class="text-5xl font-black text-secondary mb-4">利用規約</h1>
+    <h1 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">利用規約</h1>
     <div class="flex items-center justify-center gap-6 text-sm text-gray-600">
       <div class="flex items-center gap-2">
         <i class="ri-calendar-line"></i>
@@ -72,14 +80,14 @@ tailwind.config = {
 
 <section class="pb-24">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="flex gap-12">
-      <aside class="w-80 flex-shrink-0 sticky top-24 self-start">
-        <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-          <h3 class="text-lg font-bold text-secondary mb-6 flex items-center gap-2">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+      <aside class="w-full lg:w-80 flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
+        <details class="bg-white rounded-2xl shadow-lg border border-gray-100 lg:block" open>
+          <summary class="text-lg font-bold text-secondary p-8 flex items-center gap-2 cursor-pointer lg:cursor-default lg:pointer-events-none">
             <i class="ri-list-check text-primary"></i>
             目次
-          </h3>
-          <nav class="space-y-1">
+          </summary>
+          <nav class="space-y-1 px-8 pb-8">
             <a href="#section-1" class="toc-link block py-3 px-4 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg border-l-4 border-transparent">第1条 サービス利用に関する基本条項</a>
             <a href="#section-2" class="toc-link block py-3 px-4 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg border-l-4 border-transparent">第2条 ユーザーの権利と義務</a>
             <a href="#section-3" class="toc-link block py-3 px-4 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg border-l-4 border-transparent">第3条 WiFi接続とLINE連携に関する規定</a>
@@ -91,16 +99,16 @@ tailwind.config = {
             <a href="#section-9" class="toc-link block py-3 px-4 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg border-l-4 border-transparent">第9条 施設運営者向けの条項</a>
             <a href="#contact" class="toc-link block py-3 px-4 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg border-l-4 border-transparent">お問い合わせ</a>
           </nav>
-        </div>
+        </details>
       </aside>
 
       <main class="flex-1">
-        <div class="bg-white rounded-2xl shadow-lg p-12 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-12 border border-gray-100">
           <div class="prose prose-lg max-w-none">
             <p class="text-gray-600 leading-relaxed mb-12">本利用規約 (以下「本規約」といいます) は、当社が提供する「ブラックサンダー無料WiFi」サービス (以下「本サービス」といいます) の利用条件を定めるものです。本サービスをご利用いただく際には、本規約の全文をお読みいただき、これに同意いただく必要があります。</p>
 
             <section id="section-1" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第1条 サービス利用に関する基本条項</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第1条 サービス利用に関する基本条項</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">1.1 サービスの定義</h3>
               <p class="text-gray-700 leading-relaxed mb-6">本サービスは、対応施設または AD トラックにおいて、ユーザーが無料 WiFi に接続し、LINE アカウントを連携することで、ブラックサンダーの無料引換クーポンを取得できるプロモーションサービスです。</p>
@@ -129,7 +137,7 @@ tailwind.config = {
             </section>
 
             <section id="section-2" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第2条 ユーザーの権利と義務</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第2条 ユーザーの権利と義務</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">2.1 ユーザーの権利</h3>
               <p class="text-gray-700 leading-relaxed mb-4">ユーザーは、本規約に従って本サービスを利用することにより、以下の権利を有します:</p>
@@ -156,7 +164,7 @@ tailwind.config = {
             </section>
 
             <section id="section-3" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第3条 WiFi接続とLINE連携に関する規定</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第3条 WiFi接続とLINE連携に関する規定</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">3.1 WiFi 接続の手順</h3>
               <p class="text-gray-700 leading-relaxed mb-4">WiFi 接続は、以下の手順で行います:</p>
@@ -178,7 +186,7 @@ tailwind.config = {
             </section>
 
             <section id="section-4" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第4条 個人情報の取り扱い</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第4条 個人情報の取り扱い</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">4.1 収集する個人情報の種類</h3>
               <p class="text-gray-700 leading-relaxed mb-4">当社は、本サービスの提供にあたり、以下の個人情報を収集します:</p>
@@ -220,7 +228,7 @@ tailwind.config = {
             </section>
 
             <section id="section-5" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第5条 クーポンの利用条件</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第5条 クーポンの利用条件</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">5.1 クーポンの発行条件</h3>
               <p class="text-gray-700 leading-relaxed mb-6">クーポンは、1 ユーザーにつき 1 日 1 回まで発行されます。同一日に複数の施設または AD トラックで WiFi に接続した場合でも、クーポンは 1 回のみ発行されます。日付は日本標準時 (JST) の午前 0 時を基準とします。</p>
@@ -239,7 +247,7 @@ tailwind.config = {
             </section>
 
             <section id="section-6" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第6条 禁止事項</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第6条 禁止事項</h2>
               
               <p class="text-gray-700 leading-relaxed mb-4">ユーザーは、本サービスの利用にあたり、以下の行為を行ってはなりません:</p>
               
@@ -291,7 +299,7 @@ tailwind.config = {
             </section>
 
             <section id="section-7" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第7条 免責事項</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第7条 免責事項</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">7.1 サービスの中断・停止</h3>
               <p class="text-gray-700 leading-relaxed mb-6">当社は、以下の場合において、事前の通知なく本サービスの全部または一部を中断または停止することがあります。この場合、当社は一切の責任を負いません:</p>
@@ -319,7 +327,7 @@ tailwind.config = {
             </section>
 
             <section id="section-8" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第8条 規約の変更について</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第8条 規約の変更について</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">8.1 規約変更の権利</h3>
               <p class="text-gray-700 leading-relaxed mb-6">当社は、必要に応じて本規約を変更することができます。規約の変更は、法令の改正、サービス内容の変更、その他当社が必要と判断した場合に行われます。</p>
@@ -340,7 +348,7 @@ tailwind.config = {
             </section>
 
             <section id="section-9" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第9条 施設運営者向けの条項</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">第9条 施設運営者向けの条項</h2>
               
               <h3 class="text-xl font-bold text-secondary mt-8 mb-4">9.1 施設運営者の定義</h3>
               <p class="text-gray-700 leading-relaxed mb-6">本条における「施設運営者」とは、当社と契約を締結し、本サービスを自己の施設において提供する事業者を指します。</p>
@@ -383,12 +391,12 @@ tailwind.config = {
             </section>
 
             <section id="contact" class="section-content mb-16">
-              <h2 class="text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">お問い合わせ</h2>
+              <h2 class="text-xl md:text-2xl lg:text-3xl font-black text-secondary mb-6 pb-4 border-b-4 border-primary">お問い合わせ</h2>
               
               <p class="text-gray-700 leading-relaxed mb-8">本規約に関するご質問、ご相談、または本サービスに関するお問い合わせは、以下の窓口までご連絡ください。</p>
 
               <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-10 border-2 border-gray-100">
-                <div class="grid grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <h3 class="text-xl font-bold text-secondary mb-6 flex items-center gap-3">
                       <div class="w-12 h-12 flex items-center justify-center bg-primary rounded-xl">
@@ -473,7 +481,7 @@ tailwind.config = {
 
 <footer class="bg-black text-white py-16">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="grid grid-cols-4 gap-12 mb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
       <div>
         <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 flex items-center justify-center">
@@ -512,7 +520,7 @@ tailwind.config = {
       </div>
     </div>
     <div class="border-t border-gray-800 pt-8">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-8">
           <div class="text-sm text-gray-500">パートナー</div>
           <div class="flex items-center gap-6">
@@ -551,6 +559,17 @@ tailwind.config = {
 <button id="scrollToTop" class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-secondary rounded-full shadow-2xl flex items-center justify-center opacity-0 pointer-events-none transition-all hover:bg-opacity-90">
   <i class="ri-arrow-up-line ri-xl"></i>
 </button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const navToggle = document.getElementById('nav-toggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  }
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

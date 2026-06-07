@@ -45,13 +45,23 @@ tailwind.config = {
       </div>
       <span class="font-['Pacifico'] text-2xl text-primary">logo</span>
     </div>
-    <div class="flex items-center gap-8">
+    <button id="nav-toggle" class="md:hidden flex items-center justify-center w-10 h-10" aria-label="メニュー">
+      <i class="ri-menu-line text-2xl"></i>
+    </button>
+    <div id="nav-menu" class="hidden md:flex items-center gap-8">
       <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="hover:text-primary transition-colors cursor-pointer">ホームに戻る</a>
       <a href="#benefits" class="hover:text-primary transition-colors cursor-pointer">導入メリット</a>
       <a href="#process" class="hover:text-primary transition-colors cursor-pointer">導入手順</a>
       <a href="#faq" class="hover:text-primary transition-colors cursor-pointer">よくある質問</a>
-      <a href="#contact" class="bg-primary text-secondary px-6 py-2.5 !rounded-button font-bold hover:bg-opacity-90 transition-all whitespace-nowrap cursor-pointer">お問い合わせ</a>
+      <a href="#contact" class="bg-primary text-secondary px-6 py-2.5 !rounded-button font-bold hover:bg-opacity-90 transition-all cursor-pointer">お問い合わせ</a>
     </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-secondary px-6 py-4 space-y-3">
+    <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="block hover:text-primary transition-colors">ホームに戻る</a>
+    <a href="#benefits" class="block hover:text-primary transition-colors">導入メリット</a>
+    <a href="#process" class="block hover:text-primary transition-colors">導入手順</a>
+    <a href="#faq" class="block hover:text-primary transition-colors">よくある質問</a>
+    <a href="#contact" class="block bg-primary text-secondary px-6 py-2.5 !rounded-button font-bold hover:bg-opacity-90 transition-all text-center">お問い合わせ</a>
   </div>
 </nav>
 
@@ -64,20 +74,20 @@ tailwind.config = {
         <span>導入費用完全無料</span>
         <i class="ri-gift-line ri-lg"></i>
       </div>
-      <h1 class="text-6xl font-black text-white mb-8 leading-tight">
+      <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-8 leading-tight">
         施設への<br>
         <span class="text-primary">サービス導入</span>について
       </h1>
-      <p class="text-2xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto">
         初期費用 0 円・月額費用 0 円・解約金 0 円<br>
         最短 3 営業日で導入可能。集客力アップと話題性を同時に獲得できます
       </p>
-      <div class="flex gap-6 justify-center">
-        <a href="#contact" class="bg-primary text-secondary px-12 py-5 !rounded-button text-xl font-bold hover:bg-opacity-90 transition-all shadow-2xl whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="bg-primary text-secondary px-6 py-4 md:px-12 md:py-5 !rounded-button text-xl font-bold hover:bg-opacity-90 transition-all shadow-2xl inline-flex items-center justify-center gap-3 cursor-pointer">
           <i class="ri-edit-line ri-xl"></i>
           今すぐ導入申し込み
         </a>
-        <a href="#process" class="bg-white bg-opacity-10 backdrop-blur-sm text-white border-2 border-white px-12 py-5 !rounded-button text-xl font-bold hover:bg-opacity-20 transition-all whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+        <a href="#process" class="bg-white bg-opacity-10 backdrop-blur-sm text-white border-2 border-white px-6 py-4 md:px-12 md:py-5 !rounded-button text-xl font-bold hover:bg-opacity-20 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
           <i class="ri-file-text-line ri-xl"></i>
           資料請求
         </a>
@@ -92,11 +102,11 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-trophy-line mr-2"></i>導入メリット
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">サービス導入で得られる効果</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">サービス導入で得られる効果</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">無料 WiFi とブラックサンダープレゼントで、施設の価値を最大化</p>
     </div>
-    <div class="grid grid-cols-3 gap-8 mb-16">
-      <div class="bg-white rounded-3xl p-10 shadow-lg hover:shadow-2xl transition-all">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-2xl transition-all">
         <div class="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-primary to-yellow-600 rounded-2xl mb-6">
           <i class="ri-user-add-line text-secondary ri-3x"></i>
         </div>
@@ -133,14 +143,8 @@ tailwind.config = {
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-8">
-      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-10 shadow-lg">
-        <div class="flex items-center gap-4 mb-6">
-          <div class="w-16 h-16 flex items-center justify-center bg-primary rounded-2xl">
-            <i class="ri-time-line text-secondary ri-2x"></i>
-          </div>
-          <h3 class="text-2xl font-bold text-secondary">滞在時間の延長</h3>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 md:p-10 shadow-lg">
         <p class="text-gray-600 leading-relaxed mb-4">無料 WiFi の提供により、顧客の施設内滞在時間が平均 35% 延長されます。滞在時間の延長は、追加購入や再来店の可能性を高め、売上向上に直結します。</p>
         <div class="flex items-center gap-6">
           <div class="flex-1 bg-gray-100 rounded-xl p-4 text-center">
@@ -186,9 +190,9 @@ tailwind.config = {
           <i class="ri-price-tag-3-line ri-lg"></i>
           <span>完全無料</span>
         </div>
-        <h2 class="text-5xl font-black text-secondary mb-6">導入費用は 0 円</h2>
-        <p class="text-2xl text-secondary mb-12 leading-relaxed">初期費用・月額費用・解約金、すべて無料。ブラックサンダーの提供コストも弊社が全額負担いたします</p>
-        <div class="grid grid-cols-3 gap-8">
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">導入費用は 0 円</h2>
+      <p class="text-xl text-secondary mb-12 leading-relaxed">初期費用・月額費用・解約金、すべて無料。ブラックサンダーの提供コストも弊社が全額負担いたします</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <div class="bg-white bg-opacity-90 rounded-2xl p-8">
             <div class="text-6xl font-black text-secondary mb-3">¥0</div>
             <div class="text-lg font-bold text-gray-700 mb-2">初期費用</div>
@@ -216,11 +220,11 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-roadmap-line mr-2"></i>導入プロセス
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">導入までの 4 ステップ</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">導入までの 4 ステップ</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">最短 3 営業日で導入完了。シンプルなプロセスで、すぐにサービスを開始できます</p>
     </div>
-    <div class="grid grid-cols-2 gap-8">
-      <div class="bg-white rounded-3xl p-10 shadow-lg relative">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-lg relative">
         <div class="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-xl">
           <span class="text-3xl font-black text-secondary">1</span>
         </div>
@@ -245,7 +249,7 @@ tailwind.config = {
           </li>
         </ul>
       </div>
-      <div class="bg-white rounded-3xl p-10 shadow-lg relative">
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-lg relative">
         <div class="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-xl">
           <span class="text-3xl font-black text-secondary">2</span>
         </div>
@@ -270,7 +274,7 @@ tailwind.config = {
           </li>
         </ul>
       </div>
-      <div class="bg-white rounded-3xl p-10 shadow-lg relative">
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-lg relative">
         <div class="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-xl">
           <span class="text-3xl font-black text-secondary">3</span>
         </div>
@@ -295,7 +299,7 @@ tailwind.config = {
           </li>
         </ul>
       </div>
-      <div class="bg-white rounded-3xl p-10 shadow-lg relative">
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-lg relative">
         <div class="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-primary to-yellow-600 rounded-2xl flex items-center justify-center shadow-xl">
           <span class="text-3xl font-black text-secondary">4</span>
         </div>
@@ -330,16 +334,16 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-tools-line mr-2"></i>必要設備
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">導入に必要な設備・条件</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">導入に必要な設備・条件</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">シンプルな要件で、ほとんどの施設で導入可能です</p>
     </div>
-    <div class="grid grid-cols-2 gap-12">
-      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-10 shadow-lg">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 md:p-10 shadow-lg">
         <div class="flex items-center gap-4 mb-8">
           <div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-red-500 to-red-600 rounded-2xl">
             <i class="ri-star-fill text-white ri-2x"></i>
           </div>
-          <h3 class="text-3xl font-bold text-secondary">必須条件</h3>
+          <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-secondary">必須条件</h3>
         </div>
         <div class="space-y-4">
           <div class="flex items-start gap-4 p-4 bg-white rounded-xl">
@@ -380,12 +384,12 @@ tailwind.config = {
           </div>
         </div>
       </div>
-      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-10 shadow-lg">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 md:p-10 shadow-lg">
         <div class="flex items-center gap-4 mb-8">
           <div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-primary to-yellow-600 rounded-2xl">
             <i class="ri-thumb-up-fill text-secondary ri-2x"></i>
           </div>
-          <h3 class="text-3xl font-bold text-secondary">推奨条件</h3>
+          <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-secondary">推奨条件</h3>
         </div>
         <div class="space-y-4">
           <div class="flex items-start gap-4 p-4 bg-white rounded-xl">
@@ -436,10 +440,10 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-building-line mr-2"></i>導入事例
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">実際の導入事例</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">実際の導入事例</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">様々な業態の施設で、高い効果を実現しています</p>
     </div>
-    <div class="grid grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
         <div class="h-56 relative case-cafe-bg">
           <div class="absolute top-4 left-4 bg-primary text-secondary px-4 py-2 rounded-full text-sm font-bold">
@@ -537,11 +541,11 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-customer-service-2-line mr-2"></i>サポート体制
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">充実のサポート体制</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">充実のサポート体制</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">導入後も安心して運用できる、万全のサポートをご提供</p>
     </div>
-    <div class="grid grid-cols-3 gap-8">
-      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-10 shadow-lg hover:shadow-xl transition-all">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-xl transition-all">
         <div class="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-primary to-yellow-600 rounded-2xl mb-6">
           <i class="ri-24-hours-line text-secondary ri-3x"></i>
         </div>
@@ -593,7 +597,7 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-question-line mr-2"></i>FAQ
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">よくある質問</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">よくある質問</h2>
       <p class="text-xl text-gray-600">施設運営者様からよくいただくご質問にお答えします</p>
     </div>
     <div class="space-y-4">
@@ -679,16 +683,16 @@ tailwind.config = {
       <div class="inline-block bg-primary text-secondary px-6 py-2 rounded-full text-sm font-bold mb-6">
         <i class="ri-mail-send-line mr-2"></i>お申し込み
       </div>
-      <h2 class="text-5xl font-black text-secondary mb-4">サービス導入申し込みフォーム</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black text-secondary mb-4">サービス導入申し込みフォーム</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">以下のフォームに必要事項をご記入ください。24 時間以内に担当者からご連絡いたします</p>
       <div class="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-yellow-600 text-secondary px-6 py-3 rounded-full text-sm font-bold mt-6">
         <i class="ri-time-line"></i>
         <span>最短 3 営業日で導入可能</span>
       </div>
     </div>
-    <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-12 shadow-2xl">
+    <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 md:p-12 shadow-2xl">
       <form class="space-y-8">
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <label class="block text-sm font-bold text-secondary mb-3">施設名 <span class="text-red-500">*</span></label>
             <input type="text" required class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: 渋谷カフェ A 店">
@@ -710,7 +714,7 @@ tailwind.config = {
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <label class="block text-sm font-bold text-secondary mb-3">担当者名 <span class="text-red-500">*</span></label>
             <input type="text" required class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: 山田 太郎">
@@ -720,7 +724,7 @@ tailwind.config = {
             <input type="text" class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: 営業部 マネージャー">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <label class="block text-sm font-bold text-secondary mb-3">メールアドレス <span class="text-red-500">*</span></label>
             <input type="email" required class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: yamada@example.com">
@@ -730,7 +734,7 @@ tailwind.config = {
             <input type="tel" required class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: 03-1234-5678">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <label class="block text-sm font-bold text-secondary mb-3">都道府県 <span class="text-red-500">*</span></label>
             <input type="text" required class="w-full px-6 py-4 border-2 border-gray-200 !rounded-button focus:border-primary focus:outline-none text-base transition-all" placeholder="例: 東京都">
@@ -796,7 +800,7 @@ tailwind.config = {
             </div>
           </div>
         </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-primary to-yellow-600 text-secondary px-12 py-6 !rounded-button text-xl font-black hover:opacity-90 transition-all shadow-2xl whitespace-nowrap flex items-center justify-center gap-3 cursor-pointer">
+        <button type="submit" class="w-full bg-gradient-to-r from-primary to-yellow-600 text-secondary px-6 py-4 md:px-12 md:py-6 !rounded-button text-xl font-black hover:opacity-90 transition-all shadow-2xl flex items-center justify-center gap-3 cursor-pointer">
           <i class="ri-send-plane-fill ri-xl"></i>
           無料で導入申し込み
         </button>
@@ -811,30 +815,30 @@ tailwind.config = {
       <h2 class="text-4xl font-black text-secondary mb-6">その他のお問い合わせ方法</h2>
       <p class="text-lg text-gray-600">お急ぎの方や、まずは詳しい資料をご覧になりたい方はこちら</p>
     </div>
-    <div class="grid grid-cols-2 gap-8">
-      <div class="bg-white rounded-3xl p-12 shadow-lg text-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-3xl p-6 md:p-12 shadow-lg text-center">
         <div class="w-24 h-24 flex items-center justify-center bg-gradient-to-br from-primary to-yellow-600 rounded-3xl mx-auto mb-6">
           <i class="ri-file-text-line text-secondary ri-4x"></i>
         </div>
-        <h3 class="text-3xl font-bold text-secondary mb-4">資料請求</h3>
+        <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-secondary mb-4">資料請求</h3>
         <p class="text-gray-600 mb-8 leading-relaxed">サービスの詳細資料、導入事例、効果測定データなどをまとめた資料をお送りします。じっくりご検討いただけます。</p>
-        <button class="bg-secondary text-white px-10 py-4 !rounded-button text-lg font-bold hover:bg-opacity-90 transition-all shadow-xl whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+        <button class="bg-secondary text-white px-10 py-4 !rounded-button text-lg font-bold hover:bg-opacity-90 transition-all shadow-xl inline-flex items-center gap-3 cursor-pointer">
           <i class="ri-download-line ri-lg"></i>
           資料をダウンロード
         </button>
       </div>
-      <div class="bg-white rounded-3xl p-12 shadow-lg text-center">
+      <div class="bg-white rounded-3xl p-6 md:p-12 shadow-lg text-center">
         <div class="w-24 h-24 flex items-center justify-center bg-gradient-to-br from-primary to-yellow-600 rounded-3xl mx-auto mb-6">
           <i class="ri-phone-line text-secondary ri-4x"></i>
         </div>
-        <h3 class="text-3xl font-bold text-secondary mb-4">電話で相談</h3>
+        <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-secondary mb-4">電話で相談</h3>
         <p class="text-gray-600 mb-8 leading-relaxed">専門スタッフが直接ご質問にお答えします。導入に関する疑問点や不安な点など、お気軽にご相談ください。</p>
         <div class="bg-gray-50 rounded-2xl p-6 mb-6">
           <div class="text-sm text-gray-500 mb-2">お問い合わせ窓口</div>
           <div class="text-3xl font-black text-primary mb-2">0120-XXX-XXX</div>
           <div class="text-sm text-gray-600">受付時間: 平日 9:00 - 18:00</div>
         </div>
-        <button class="bg-secondary text-white px-10 py-4 !rounded-button text-lg font-bold hover:bg-opacity-90 transition-all shadow-xl whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+        <button class="bg-secondary text-white px-10 py-4 !rounded-button text-lg font-bold hover:bg-opacity-90 transition-all shadow-xl inline-flex items-center gap-3 cursor-pointer">
           <i class="ri-customer-service-2-line ri-lg"></i>
           今すぐ電話する
         </button>
@@ -850,15 +854,15 @@ tailwind.config = {
       <div class="w-32 h-32 mx-auto mb-8 flex items-center justify-center bg-primary rounded-3xl shadow-2xl">
         <i class="ri-flashlight-fill text-secondary ri-4x"></i>
       </div>
-      <h2 class="text-5xl font-black mb-6">今すぐ無料で導入しませんか?</h2>
+      <h2 class="text-2xl md:text-4xl lg:text-5xl font-black mb-6">今すぐ無料で導入しませんか?</h2>
       <p class="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">初期費用 0 円・月額費用 0 円・解約金 0 円。最短 3 営業日で、集客力アップと話題性を同時に獲得できます</p>
     </div>
     <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-      <a href="#contact" class="bg-primary text-secondary px-12 py-5 !rounded-button text-xl font-bold hover:bg-opacity-90 transition-all shadow-2xl whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+      <a href="#contact" class="bg-primary text-secondary px-6 py-4 md:px-12 md:py-5 !rounded-button text-xl font-bold hover:bg-opacity-90 transition-all shadow-2xl inline-flex items-center gap-3 cursor-pointer">
         <i class="ri-edit-line ri-xl"></i>
         導入申し込み
       </a>
-      <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="bg-white bg-opacity-10 backdrop-blur-sm text-white border-2 border-white px-12 py-5 !rounded-button text-xl font-bold hover:bg-opacity-20 transition-all whitespace-nowrap inline-flex items-center gap-3 cursor-pointer">
+      <a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="bg-white bg-opacity-10 backdrop-blur-sm text-white border-2 border-white px-6 py-4 md:px-12 md:py-5 !rounded-button text-xl font-bold hover:bg-opacity-20 transition-all inline-flex items-center gap-3 cursor-pointer">
         <i class="ri-home-line ri-xl"></i>
         ホームに戻る
       </a>
@@ -868,7 +872,7 @@ tailwind.config = {
 
 <footer class="bg-black text-white py-16">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="grid grid-cols-4 gap-12 mb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
       <div>
         <div class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 flex items-center justify-center">
@@ -907,7 +911,7 @@ tailwind.config = {
       </div>
     </div>
     <div class="border-t border-gray-800 pt-8">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-8">
           <div class="text-sm text-gray-500">パートナー</div>
           <div class="flex items-center gap-6">
@@ -964,7 +968,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  const navToggle = document.getElementById('nav-toggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  }
+});
   navLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
