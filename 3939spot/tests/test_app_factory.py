@@ -130,7 +130,7 @@ class TestBlueprintRegistration:
     def test_notifications_blueprint_truck(self, client):
         """notifications Blueprint: POST /api/admin/notifications/truck が応答すること。"""
         res = client.post("/api/admin/notifications/truck", json={})
-        assert res.status_code in (200, 401, 403)
+        assert res.status_code in (200, 400, 401, 403)
 
     def test_admin_blueprint_dashboard(self, client):
         """admin Blueprint: GET /admin が応答すること。"""

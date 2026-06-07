@@ -1,0 +1,67 @@
+name: Build, Test & Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPOSITORY }}/3939spot
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. チェックアウト ──────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Python 3.12 セットアップ ───────────────────────
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      # ── 3. 依存パッケージインストール ─────────────────────
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── 4. テスト実行（失敗時はデプロイ中断） ──────────────
+      - name: Run tests
+        run: pytest tests/
+        env:
+          FLASK_ENV: testing
+          SECRET_KEY: ci-secret-key-for-testing
+
+      # ── 5. Google Cloud 認証 ───────────────────────────────
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # ── 6. Docker CLI に Artifact Registry を認証 ──────────
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ secrets.GAR_LOCATION }}-docker.pkg.dev --quiet
+
+      # ── 7. Docker ビルド & プッシュ ─────────────────────────
+      - name: Build and push Docker image
+        run: |
+          docker build \
+            --tag "$IMAGE:${{ github.sha }}" \
+            --tag "$IMAGE:latest" \
+            .
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+
+      # ── 8. Cloud Run へデプロイ ────────────────────────────
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy 3939spot \
+            --image "$IMAGE:${{ github.sha }}" \
+            --region ${{ secrets.GAR_LOCATION }} \
+            --platform managed \
+            --max-instances 1 \
+            --allow-unauthenticated \
+            --quiet

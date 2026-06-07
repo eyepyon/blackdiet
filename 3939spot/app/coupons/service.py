@@ -95,27 +95,48 @@ def _already_issued_today(user_id: str, spot_id: str) -> bool:
 # 交換券発行ロジック
 # ──────────────────────────────────────────
 
-def issue_coupon(user_id: str, spot_id: str) -> "Coupon | None":
+def issue_coupon(user_id: str, spot_id: str, redis_client=None) -> "Coupon | None":
     """
-    交換券を発行する。Redis不要のSQLite版。
+    交換券を発行する。
 
-    1日1枚制限はSQLiteへの直接クエリで実現する。
-    同日同スポットで既に発行済みの場合は None を返す（ALREADY_ISSUED）。
+    1日1枚制限をチェックし、未発行の場合のみ新規 Coupon を保存して返す。
+    redis_client が渡された場合は Redis キーで重複チェックし、発行後にフラグをセットする。
+    redis_client が None の場合（またはRedis接続エラー時）は SQLite クエリで重複チェックする。
 
     Args:
         user_id: ユーザーの UUID 文字列。
         spot_id: スポットの UUID 文字列。
+        redis_client: Redis クライアント（オプション）。None の場合はSQLite版ロジック使用。
 
     Returns:
         新規発行された Coupon オブジェクト、または None（既発行の場合）。
     """
-    # ── 重複チェック（DBクエリ） ─────────────
-    if _already_issued_today(user_id, spot_id):
-        logger.debug(
-            "交換券取得済み（当日）: user_id=%s spot_id=%s date=%s",
-            user_id, spot_id, get_jst_date(),
-        )
-        return None  # ALREADY_ISSUED
+    date_jst = get_jst_date()
+    redis_key = f"coupon:daily:{user_id}:{spot_id}:{date_jst}"
+
+    # ── 重複チェック ─────────────────────────
+    if redis_client is not None:
+        # Redis 版: exists() で重複チェック
+        try:
+            if redis_client.exists(redis_key):
+                logger.debug(
+                    "交換券取得済み（Redis）: user_id=%s spot_id=%s date=%s",
+                    user_id, spot_id, date_jst,
+                )
+                return None  # ALREADY_ISSUED
+        except Exception:
+            # Redis 接続エラーの場合は SQLite フォールバック
+            logger.warning("Redis exists() 失敗。SQLite フォールバックで重複チェック。")
+            if _already_issued_today(user_id, spot_id):
+                return None
+    else:
+        # SQLite 版: DB クエリで重複チェック
+        if _already_issued_today(user_id, spot_id):
+            logger.debug(
+                "交換券取得済み（SQLite）: user_id=%s spot_id=%s date=%s",
+                user_id, spot_id, date_jst,
+            )
+            return None  # ALREADY_ISSUED
 
     # ── 新規発行 ────────────────────────────
     coupon = Coupon(
@@ -131,4 +152,13 @@ def issue_coupon(user_id: str, spot_id: str) -> "Coupon | None":
         "交換券発行: user_id=%s spot_id=%s coupon_id=%s",
         user_id, spot_id, coupon.id,
     )
+
+    # ── Redis フラグセット ───────────────────
+    if redis_client is not None:
+        try:
+            ttl = ttl_until_midnight_jst()
+            redis_client.set(redis_key, 1, ex=ttl)
+        except Exception:
+            logger.warning("Redis set() 失敗。フラグ未設定だが Coupon は発行済み。")
+
     return coupon

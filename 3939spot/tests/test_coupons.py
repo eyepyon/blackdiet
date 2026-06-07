@@ -70,7 +70,7 @@ def _mock_redis(exists_return=False):
     """
     mock = MagicMock()
     mock.exists.return_value = exists_return
-    mock.setex.return_value = True
+    mock.set.return_value = True
     return mock
 
 
@@ -124,7 +124,7 @@ class TestIssueCoupon:
 
         issue_coupon(str(user.id), str(spot.id), redis_client=redis_mock)
 
-        # set が1回呼ばれていること
+        # set が1回呼ばれていること（実装は redis.set(key, 1, ex=ttl) を使用）
         assert redis_mock.set.call_count == 1
         # 引数のキーが正しい形式であること
         call_args = redis_mock.set.call_args
@@ -324,15 +324,15 @@ class TestIssueCoupon:
         assert fetched is not None
 
     def test_redis_setex_error_still_returns_coupon(self, db):
-        """Redis の setex() が例外を投げても、Coupon オブジェクトが返される。"""
+        """Redis の set() が例外を投げても、Coupon オブジェクトが返される。"""
         from app.coupons.service import issue_coupon
 
         user, spot = _create_user_and_spot(db)
 
-        # exists() は False（未発行）、setex() は例外
+        # exists() は False（未発行）、set() は例外
         redis_mock = MagicMock()
         redis_mock.exists.return_value = False
-        redis_mock.setex.side_effect = ConnectionError("Redis 書き込みエラー")
+        redis_mock.set.side_effect = ConnectionError("Redis 書き込みエラー")
 
         coupon = issue_coupon(str(user.id), str(spot.id), redis_client=redis_mock)
 
