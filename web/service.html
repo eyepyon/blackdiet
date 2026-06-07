@@ -33,14 +33,7 @@ tailwind.config = {
   }
 }
 </script>
-<style>
-:where([class^="ri-"])::before {
-  content: "\f3c2";
-}
-.!rounded-button {
-  border-radius: 8px !important;
-}
-</style>
+<link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="bg-white">
 
@@ -63,7 +56,7 @@ tailwind.config = {
 </nav>
 
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-secondary via-gray-900 to-black">
-  <div class="absolute inset-0 opacity-20" style="background: url('https://readdy.ai/api/search-image?query=Modern%20business%20office%20interior%20with%20professional%20atmosphere%20sleek%20furniture%20and%20technology%20equipment%20wireless%20network%20symbols%20floating%20in%20air%20contemporary%20corporate%20environment%20with%20warm%20golden%20lighting%20accents%20clean%20minimalist%20design%20professional%20photography&width=1920&height=1080&seq=business-hero-001&orientation=landscape') center/cover no-repeat;"></div>
+  <div class="absolute inset-0 opacity-20 service-hero-bg"></div>
   <div class="max-w-7xl mx-auto px-6 py-32 w-full relative z-10">
     <div class="max-w-4xl mx-auto text-center">
       <div class="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-yellow-600 text-secondary px-8 py-3 rounded-full text-base font-black mb-8 shadow-2xl">
@@ -448,7 +441,7 @@ tailwind.config = {
     </div>
     <div class="grid grid-cols-3 gap-8">
       <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-        <div class="h-56 relative" style="background: url('https://readdy.ai/api/search-image?query=Stylish%20modern%20cafe%20interior%20with%20comfortable%20seating%20area%20wooden%20tables%20and%20chairs%20warm%20ambient%20lighting%20customers%20enjoying%20coffee%20contemporary%20design%20with%20plants%20and%20minimalist%20decor%20inviting%20atmosphere%20professional%20interior%20photography&width=600&height=400&seq=cafe-case-001&orientation=landscape') center/cover no-repeat;">
+        <div class="h-56 relative case-cafe-bg">
           <div class="absolute top-4 left-4 bg-primary text-secondary px-4 py-2 rounded-full text-sm font-bold">
             <i class="ri-cup-line mr-2"></i>カフェ
           </div>
@@ -477,7 +470,7 @@ tailwind.config = {
         </div>
       </div>
       <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-        <div class="h-56 relative" style="background: url('https://readdy.ai/api/search-image?query=Large%20modern%20shopping%20mall%20interior%20with%20multiple%20floors%20bright%20spacious%20atrium%20shoppers%20walking%20contemporary%20retail%20architecture%20with%20natural%20lighting%20clean%20design%20professional%20commercial%20photography&width=600&height=400&seq=mall-case-001&orientation=landscape') center/cover no-repeat;">
+        <div class="h-56 relative case-mall-bg">
           <div class="absolute top-4 left-4 bg-primary text-secondary px-4 py-2 rounded-full text-sm font-bold">
             <i class="ri-shopping-bag-line mr-2"></i>ショッピングモール
           </div>
@@ -506,7 +499,7 @@ tailwind.config = {
         </div>
       </div>
       <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-        <div class="h-56 relative" style="background: url('https://readdy.ai/api/search-image?query=Modern%20coworking%20space%20interior%20with%20open%20workspace%20desks%20computers%20collaborative%20environment%20natural%20light%20contemporary%20office%20furniture%20plants%20professional%20workers%20focused%20atmosphere%20clean%20minimalist%20design%20professional%20photography&width=600&height=400&seq=coworking-case-001&orientation=landscape') center/cover no-repeat;">
+        <div class="h-56 relative case-coworking-bg">
           <div class="absolute top-4 left-4 bg-primary text-secondary px-4 py-2 rounded-full text-sm font-bold">
             <i class="ri-community-line mr-2"></i>コワーキングスペース
           </div>
@@ -851,7 +844,7 @@ tailwind.config = {
 </section>
 
 <section class="py-24 bg-gradient-to-br from-secondary via-gray-900 to-secondary text-white relative overflow-hidden">
-  <div class="absolute inset-0 opacity-10" style="background: url('https://readdy.ai/api/search-image?query=Premium%20chocolate%20bars%20with%20golden%20wrapper%20and%20lightning%20bolt%20design%20scattered%20on%20dark%20elegant%20surface%20with%20soft%20bokeh%20lights%20luxury%20product%20photography%20dramatic%20lighting%20rich%20textures&width=1920&height=1080&seq=footer-cta-bg-001&orientation=landscape') center/cover no-repeat;"></div>
+  <div class="absolute inset-0 opacity-10 service-footer-cta-bg"></div>
   <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
     <div class="mb-12">
       <div class="w-32 h-32 mx-auto mb-8 flex items-center justify-center bg-primary rounded-3xl shadow-2xl">

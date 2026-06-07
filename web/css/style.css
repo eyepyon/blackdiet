@@ -1,0 +1,79 @@
+/* ============================================================
+   3939SPOT — 共通スタイルシート
+   Tailwind CSS (CDN) と組み合わせて使用
+   ============================================================ */
+
+/* ── Remixicon フォールバック ─────────────────────────────── */
+:where([class^="ri-"])::before {
+  content: "\f3c2";
+}
+
+/* ── ボタン角丸の上書き ────────────────────────────────────── */
+.!rounded-button {
+  border-radius: 8px !important;
+}
+
+/* ── スクロール挙動 ────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── FAQアコーディオン ─────────────────────────────────────── */
+.faq-content {
+  display: none;
+}
+
+/* ── 目次リンク（利用規約・プライバシーポリシー用） ────────── */
+.toc-link {
+  transition: all 0.2s;
+}
+.toc-link.active {
+  color: #D4AF37;
+  font-weight: 700;
+  border-left-color: #D4AF37;
+}
+
+/* ── セクション見出しのスクロール位置補正 ──────────────────── */
+.section-content {
+  scroll-margin-top: 100px;
+}
+
+/* ── ヒーローセクション背景画像 (index.html) ───────────────── */
+.hero-section {
+  background-image: url('../img/hero-main.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ── 施設導入ページ ヒーロー背景 (service.html) ─────────────── */
+.service-hero-bg {
+  background-image: url('../img/business-hero.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ── 施設導入ページ フッターCTA背景 (service.html) ──────────── */
+.service-footer-cta-bg {
+  background-image: url('../img/footer-cta-bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ── 導入事例カード背景画像 (service.html) ─────────────────── */
+.case-cafe-bg {
+  background-image: url('../img/cafe-case.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.case-mall-bg {
+  background-image: url('../img/mall-case.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.case-coworking-bg {
+  background-image: url('../img/coworking-case.jpg');
+  background-size: cover;
+  background-position: center;
+}
