@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiFi スポット検索 - ブラックサンダー無料WiFi</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script>
+tailwind.config={
+theme:{
+extend:{
+colors:{
+primary:'#1a1a1a',
+secondary:'#d4af37'
+},
+borderRadius:{
+'none':'0px',
+'sm':'4px',
+DEFAULT:'8px',
+'md':'12px',
+'lg':'16px',
+'xl':'20px',
+'2xl':'24px',
+'3xl':'32px',
+'full':'9999px',
+'button':'8px'
+}
+}
+}
+}
+</script>
+<style>
+:where([class^="ri-"])::before {
+content: "\f3c2";
+}
+.!rounded-button {
+border-radius: 8px;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-primary text-white py-4 px-6">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+<div class="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
+<i class="ri-flashlight-fill text-2xl text-primary"></i>
+</div>
+<span class="font-['Pacifico'] text-2xl">logo</span>
+</a>
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold">WiFi スポット検索</span>
+<a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="flex items-center gap-2 bg-white/10 px-5 py-2.5 !rounded-button hover:bg-white/20 transition-colors whitespace-nowrap">
+<i class="ri-home-4-line text-lg"></i>
+<span>ホームに戻る</span>
+</a>
+</div>
+</div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+<div class="flex items-center gap-4 mb-6">
+<button id="getCurrentLocation" class="flex items-center gap-2 bg-secondary text-primary px-6 py-3 !rounded-button font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
+<i class="ri-map-pin-user-line text-xl"></i>
+現在地を取得
+</button>
+<div class="flex-1 flex items-center gap-4">
+<div class="flex-1">
+<label class="block text-sm font-bold text-gray-700 mb-2">施設タイプ</label>
+<div class="relative">
+<button id="facilityTypeBtn" class="w-full flex items-center justify-between bg-gray-50 border-2 border-gray-200 px-4 py-3 rounded-button hover:border-secondary transition-colors">
+<span id="selectedFacilityType" class="text-gray-700">すべて</span>
+<i class="ri-arrow-down-s-line text-xl text-gray-400"></i>
+</button>
+<div id="facilityTypeDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-button shadow-xl z-50 max-h-64 overflow-y-auto">
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="all">すべて</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="cafe">カフェ</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="mall">ショッピングモール</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="station">駅</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="convenience">コンビニ</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="restaurant">レストラン</div>
+<div class="facility-type-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="hotel">ホテル</div>
+</div>
+</div>
+</div>
+<div class="flex-1">
+<label class="block text-sm font-bold text-gray-700 mb-2">距離範囲</label>
+<div class="relative">
+<button id="distanceRangeBtn" class="w-full flex items-center justify-between bg-gray-50 border-2 border-gray-200 px-4 py-3 rounded-button hover:border-secondary transition-colors">
+<span id="selectedDistanceRange" class="text-gray-700">3 km</span>
+<i class="ri-arrow-down-s-line text-xl text-gray-400"></i>
+</button>
+<div id="distanceRangeDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-button shadow-xl z-50">
+<div class="distance-range-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="0.5">500 m</div>
+<div class="distance-range-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="1">1 km</div>
+<div class="distance-range-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="3">3 km</div>
+<div class="distance-range-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="5">5 km</div>
+<div class="distance-range-option px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors" data-value="10">10 km</div>
+</div>
+</div>
+</div>
+<button id="resetFilters" class="self-end px-6 py-3 border-2 border-gray-300 text-gray-700 !rounded-button font-bold hover:border-primary hover:text-primary transition-colors whitespace-nowrap">
+リセット
+</button>
+</div>
+</div>
+<div id="filterTags" class="flex items-center gap-2 flex-wrap"></div>
+</div>
+
+<div class="grid grid-cols-3 gap-6">
+<div class="col-span-2">
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+<div class="relative h-[600px]" style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;">
+<div class="absolute top-4 left-4 bg-white rounded-lg px-4 py-3 shadow-xl">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+<span class="font-bold text-sm">25 件のスポットを表示中</span>
+</div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col gap-2">
+<button class="w-12 h-12 bg-white rounded-button shadow-xl flex items-center justify-center hover:bg-gray-50 transition-colors">
+<i class="ri-add-line text-2xl text-primary"></i>
+</button>
+<button class="w-12 h-12 bg-white rounded-button shadow-xl flex items-center justify-center hover:bg-gray-50 transition-colors">
+<i class="ri-subtract-line text-2xl text-primary"></i>
+</button>
+<button class="w-12 h-12 bg-white rounded-button shadow-xl flex items-center justify-center hover:bg-gray-50 transition-colors">
+<i class="ri-focus-3-line text-2xl text-primary"></i>
+</button>
+</div>
+<div id="currentLocationMarker" class="hidden absolute w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-xl" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+<div class="spot-marker absolute w-8 h-8 bg-secondary rounded-full border-4 border-white shadow-xl cursor-pointer hover:scale-110 transition-transform" style="top: 45%; left: 48%;" data-spot-id="1"></div>
+<div class="spot-marker absolute w-8 h-8 bg-secondary rounded-full border-4 border-white shadow-xl cursor-pointer hover:scale-110 transition-transform" style="top: 52%; left: 55%;" data-spot-id="2"></div>
+<div class="spot-marker absolute w-8 h-8 bg-secondary rounded-full border-4 border-white shadow-xl cursor-pointer hover:scale-110 transition-transform" style="top: 48%; left: 45%;" data-spot-id="3"></div>
+<div class="spot-marker absolute w-8 h-8 bg-secondary rounded-full border-4 border-white shadow-xl cursor-pointer hover:scale-110 transition-transform" style="top: 55%; left: 52%;" data-spot-id="4"></div>
+<div class="spot-marker absolute w-8 h-8 bg-secondary rounded-full border-4 border-white shadow-xl cursor-pointer hover:scale-110 transition-transform" style="top: 42%; left: 50%;" data-spot-id="5"></div>
+</div>
+</div>
+</div>
+
+<div class="col-span-1">
+<div class="bg-white rounded-2xl shadow-lg p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold text-primary">スポットリスト</h3>
+<span class="text-sm text-gray-500">25 件</span>
+</div>
+<div id="spotList" class="space-y-4 max-h-[540px] overflow-y-auto pr-2">
+<div class="spot-card border-2 border-gray-100 rounded-xl p-4 hover:border-secondary transition-colors cursor-pointer" data-spot-id="1">
+<div class="flex items-start justify-between mb-3">
+<div class="flex-1">
+<h4 class="font-bold text-primary mb-1">スターバックス 渋谷センター街店</h4>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
+<i class="ri-cup-line text-sm text-amber-600"></i>
+</div>
+<span class="text-xs text-gray-500">カフェ</span>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">0.3 km</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">東京都渋谷区宇田川町 21-6</p>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ri-time-line text-sm text-gray-400"></i>
+<span class="text-sm text-green-600 font-bold">営業中</span>
+<span class="text-xs text-gray-500">8:00 - 22:00</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-xs text-gray-600">混雑状況:</span>
+<div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-green-500 rounded-full" style="width: 30%"></div>
+</div>
+<span class="text-xs font-bold text-green-600">空いている</span>
+</div>
+<button class="w-full bg-primary text-white px-4 py-2.5 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
+</div>
+
+<div class="spot-card border-2 border-gray-100 rounded-xl p-4 hover:border-secondary transition-colors cursor-pointer" data-spot-id="2">
+<div class="flex items-start justify-between mb-3">
+<div class="flex-1">
+<h4 class="font-bold text-primary mb-1">タリーズコーヒー 渋谷公園通り店</h4>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
+<i class="ri-cup-line text-sm text-amber-600"></i>
+</div>
+<span class="text-xs text-gray-500">カフェ</span>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">0.5 km</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">東京都渋谷区神南 1-20-5</p>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ri-time-line text-sm text-gray-400"></i>
+<span class="text-sm text-green-600 font-bold">営業中</span>
+<span class="text-xs text-gray-500">7:30 - 21:30</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-xs text-gray-600">混雑状況:</span>
+<div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-xs font-bold text-orange-600">やや混雑</span>
+</div>
+<button class="w-full bg-primary text-white px-4 py-2.5 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
+</div>
+
+<div class="spot-card border-2 border-gray-100 rounded-xl p-4 hover:border-secondary transition-colors cursor-pointer" data-spot-id="3">
+<div class="flex items-start justify-between mb-3">
+<div class="flex-1">
+<h4 class="font-bold text-primary mb-1">渋谷マークシティ</h4>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 bg-purple-100 rounded flex items-center justify-center">
+<i class="ri-shopping-bag-3-line text-sm text-purple-600"></i>
+</div>
+<span class="text-xs text-gray-500">ショッピングモール</span>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">0.4 km</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">東京都渋谷区道玄坂 1-12-1</p>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ri-time-line text-sm text-gray-400"></i>
+<span class="text-sm text-green-600 font-bold">営業中</span>
+<span class="text-xs text-gray-500">10:00 - 21:00</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-xs text-gray-600">混雑状況:</span>
+<div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-red-500 rounded-full" style="width: 85%"></div>
+</div>
+<span class="text-xs font-bold text-red-600">混雑</span>
+</div>
+<button class="w-full bg-primary text-white px-4 py-2.5 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
+</div>
+
+<div class="spot-card border-2 border-gray-100 rounded-xl p-4 hover:border-secondary transition-colors cursor-pointer" data-spot-id="4">
+<div class="flex items-start justify-between mb-3">
+<div class="flex-1">
+<h4 class="font-bold text-primary mb-1">ドトールコーヒー 渋谷文化村通り店</h4>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
+<i class="ri-cup-line text-sm text-amber-600"></i>
+</div>
+<span class="text-xs text-gray-500">カフェ</span>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">0.6 km</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">東京都渋谷区道玄坂 2-6-17</p>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ri-time-line text-sm text-gray-400"></i>
+<span class="text-sm text-green-600 font-bold">営業中</span>
+<span class="text-xs text-gray-500">7:00 - 22:00</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-xs text-gray-600">混雑状況:</span>
+<div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-green-500 rounded-full" style="width: 40%"></div>
+</div>
+<span class="text-xs font-bold text-green-600">空いている</span>
+</div>
+<button class="w-full bg-primary text-white px-4 py-2.5 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
+</div>
+
+<div class="spot-card border-2 border-gray-100 rounded-xl p-4 hover:border-secondary transition-colors cursor-pointer" data-spot-id="5">
+<div class="flex items-start justify-between mb-3">
+<div class="flex-1">
+<h4 class="font-bold text-primary mb-1">セブンイレブン 渋谷センター街店</h4>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
+<i class="ri-store-2-line text-sm text-green-600"></i>
+</div>
+<span class="text-xs text-gray-500">コンビニ</span>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">0.2 km</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">東京都渋谷区宇田川町 25-4</p>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ri-time-line text-sm text-gray-400"></i>
+<span class="text-sm text-green-600 font-bold">24 時間営業</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-xs text-gray-600">混雑状況:</span>
+<div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 rounded-full" style="width: 55%"></div>
+</div>
+<span class="text-xs font-bold text-orange-600">やや混雑</span>
+</div>
+<button class="w-full bg-primary text-white px-4 py-2.5 !rounded-button text-sm font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">詳細を見る</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="spotDetailModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+<div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+<div class="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
+<h3 class="text-2xl font-bold text-primary">スポット詳細</h3>
+<button id="closeModal" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+<i class="ri-close-line text-2xl text-primary"></i>
+</button>
+</div>
+<div class="p-8">
+<div class="relative h-64 rounded-xl overflow-hidden mb-6">
+<img src="https://readdy.ai/api/search-image?query=Modern%20cozy%20cafe%20interior%20with%20comfortable%20seating%20warm%20lighting%20wooden%20furniture%20and%20plants%20welcoming%20atmosphere%20contemporary%20design%20large%20windows%20with%20natural%20light%20coffee%20shop%20aesthetic%20high%20quality%20commercial%20photography&width=800&height=600&seq=spot-detail-001&orientation=landscape" alt="スポット写真" class="w-full h-full object-cover object-top">
+</div>
+<div class="mb-6">
+<div class="flex items-start justify-between mb-4">
+<div class="flex-1">
+<h4 class="text-2xl font-bold text-primary mb-2">スターバックス 渋谷センター街店</h4>
+<div class="flex items-center gap-2 mb-3">
+<div class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+<i class="ri-cup-line text-lg text-amber-600"></i>
+</div>
+<span class="text-sm text-gray-600">カフェ</span>
+</div>
+</div>
+<span class="text-xl font-bold text-secondary">0.3 km</span>
+</div>
+<div class="bg-gray-50 rounded-xl p-4 mb-4">
+<div class="flex items-start gap-3 mb-3">
+<i class="ri-map-pin-line text-xl text-gray-400"></i>
+<div>
+<p class="font-bold text-sm text-gray-700 mb-1">住所</p>
+<p class="text-sm text-gray-600">〒150-0042 東京都渋谷区宇田川町 21-6 渋谷センタービル 1F</p>
+</div>
+</div>
+<div class="flex items-start gap-3 mb-3">
+<i class="ri-phone-line text-xl text-gray-400"></i>
+<div>
+<p class="font-bold text-sm text-gray-700 mb-1">電話番号</p>
+<p class="text-sm text-gray-600">03-1234-5678</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<i class="ri-time-line text-xl text-gray-400"></i>
+<div class="flex-1">
+<p class="font-bold text-sm text-gray-700 mb-2">営業時間</p>
+<div class="space-y-1 text-sm text-gray-600">
+<div class="flex justify-between"><span>月曜日 - 金曜日</span><span>8:00 - 22:00</span></div>
+<div class="flex justify-between"><span>土曜日</span><span>9:00 - 22:00</span></div>
+<div class="flex justify-between"><span>日曜日・祝日</span><span>9:00 - 21:00</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border-2 border-green-200">
+<div class="flex items-center gap-3 mb-3">
+<i class="ri-wifi-line text-2xl text-green-600"></i>
+<h5 class="font-bold text-primary">WiFi 接続手順</h5>
+</div>
+<ol class="space-y-2 text-sm text-gray-700 ml-11">
+<li>1. 店内の QR コードをスキャン</li>
+<li>2. WiFi ネットワーク「BlackThunder_Free」に自動接続</li>
+<li>3. LINE アカウント連携画面が表示されます</li>
+<li>4. 連携完了後、クーポンが LINE に届きます</li>
+</ol>
+</div>
+<div class="bg-gray-50 rounded-xl p-4 mb-4">
+<h5 class="font-bold text-primary mb-3">リアルタイム混雑状況</h5>
+<div class="flex items-center gap-2 mb-2">
+<span class="text-sm text-gray-600">現在:</span>
+<div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-green-500 rounded-full" style="width: 30%"></div>
+</div>
+<span class="text-sm font-bold text-green-600">空いている (30%)</span>
+</div>
+<div class="grid grid-cols-7 gap-2 mt-4">
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">9:00</div>
+<div class="h-16 bg-green-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">11:00</div>
+<div class="h-16 bg-orange-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">13:00</div>
+<div class="h-16 bg-red-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">15:00</div>
+<div class="h-16 bg-orange-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">17:00</div>
+<div class="h-16 bg-green-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">19:00</div>
+<div class="h-16 bg-orange-200 rounded"></div>
+</div>
+<div class="text-center">
+<div class="text-xs text-gray-500 mb-1">21:00</div>
+<div class="h-16 bg-green-200 rounded"></div>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-secondary/10 to-yellow-100 rounded-xl p-6 text-center mb-4">
+<div class="w-32 h-32 mx-auto mb-4 bg-white rounded-xl flex items-center justify-center">
+<i class="ri-qr-code-line text-6xl text-primary"></i>
+</div>
+<p class="text-sm text-gray-700 mb-2">店内でこの QR コードをスキャン</p>
+<p class="text-xs text-gray-500">WiFi に接続してクーポンをゲット!</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-white px-6 py-4 !rounded-button font-bold hover:bg-gray-800 transition-colors whitespace-nowrap flex items-center justify-center gap-2">
+<i class="ri-route-line text-xl"></i>
+ルート案内
+</button>
+<button class="flex-1 bg-white border-2 border-secondary text-secondary px-6 py-4 !rounded-button font-bold hover:bg-secondary/10 transition-colors whitespace-nowrap flex items-center justify-center gap-2">
+<i class="ri-heart-line text-xl"></i>
+お気に入り
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<footer class="bg-primary text-white py-16 px-6 mt-16">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-4 gap-12 mb-12">
+<div>
+<a href="https://readdy.ai/home/92d9ee94-53e3-4c06-8921-0409fa16b205/6a1b6bb1-67fa-4b49-8d03-dca1e6711437" data-readdy="true" class="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity">
+<div class="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
+<i class="ri-flashlight-fill text-2xl text-primary"></i>
+</div>
+<span class="font-['Pacifico'] text-2xl">logo</span>
+</a>
+<p class="text-white/70 text-sm leading-relaxed">WiFi に接続するだけでブラックサンダーがもらえる、新しいプロモーションサービスです。</p>
+</div>
+<div>
+<h4 class="font-bold mb-4">サービス</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">もらい方</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">受け取り場所</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">AD トラック情報</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">よくある質問</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">施設運営者向け</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">導入のご案内</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">導入事例</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">管理画面ログイン</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">お問い合わせ</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">企業情報</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">会社概要</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">利用規約</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">プライバシーポリシー</a></li>
+<li><a href="#" class="text-white/70 hover:text-secondary transition-colors">お問い合わせ</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-white/10 pt-8">
+<div class="flex items-center justify-between">
+<p class="text-white/50 text-sm">&copy; 2026 ブラックサンダー無料 WiFi. All rights reserved.</p>
+<div class="flex items-center gap-4">
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<i class="ri-twitter-x-line text-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<i class="ri-facebook-fill text-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<i class="ri-instagram-line text-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors">
+<i class="ri-line-fill text-lg"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+
+<script id="dropdown-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const facilityTypeBtn = document.getElementById('facilityTypeBtn');
+const facilityTypeDropdown = document.getElementById('facilityTypeDropdown');
+const distanceRangeBtn = document.getElementById('distanceRangeBtn');
+const distanceRangeDropdown = document.getElementById('distanceRangeDropdown');
+
+facilityTypeBtn.addEventListener('click', function(e) {
+e.stopPropagation();
+facilityTypeDropdown.classList.toggle('hidden');
+distanceRangeDropdown.classList.add('hidden');
+});
+
+distanceRangeBtn.addEventListener('click', function(e) {
+e.stopPropagation();
+distanceRangeDropdown.classList.toggle('hidden');
+facilityTypeDropdown.classList.add('hidden');
+});
+
+document.addEventListener('click', function() {
+facilityTypeDropdown.classList.add('hidden');
+distanceRangeDropdown.classList.add('hidden');
+});
+
+const facilityTypeOptions = document.querySelectorAll('.facility-type-option');
+facilityTypeOptions.forEach(option => {
+option.addEventListener('click', function() {
+document.getElementById('selectedFacilityType').textContent = this.textContent;
+facilityTypeDropdown.classList.add('hidden');
+});
+});
+
+const distanceRangeOptions = document.querySelectorAll('.distance-range-option');
+distanceRangeOptions.forEach(option => {
+option.addEventListener('click', function() {
+document.getElementById('selectedDistanceRange').textContent = this.textContent;
+distanceRangeDropdown.classList.add('hidden');
+});
+});
+});
+</script>
+
+<script id="location-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const getCurrentLocationBtn = document.getElementById('getCurrentLocation');
+const currentLocationMarker = document.getElementById('currentLocationMarker');
+
+getCurrentLocationBtn.addEventListener('click', function() {
+this.innerHTML = '<i class="ri-loader-4-line text-xl animate-spin"></i>現在地を取得中...';
+this.disabled = true;
+
+setTimeout(() => {
+currentLocationMarker.classList.remove('hidden');
+this.innerHTML = '<i class="ri-map-pin-user-line text-xl"></i>現在地を取得';
+this.disabled = false;
+}, 1500);
+});
+});
+</script>
+
+<script id="modal-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const modal = document.getElementById('spotDetailModal');
+const closeModalBtn = document.getElementById('closeModal');
+const detailButtons = document.querySelectorAll('.spot-card button');
+
+detailButtons.forEach(button => {
+button.addEventListener('click', function(e) {
+e.stopPropagation();
+modal.classList.remove('hidden');
+document.body.style.overflow = 'hidden';
+});
+});
+
+closeModalBtn.addEventListener('click', function() {
+modal.classList.add('hidden');
+document.body.style.overflow = 'auto';
+});
+
+modal.addEventListener('click', function(e) {
+if (e.target === modal) {
+modal.classList.add('hidden');
+document.body.style.overflow = 'auto';
+}
+});
+});
+</script>
+
+<script id="marker-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const spotMarkers = document.querySelectorAll('.spot-marker');
+const spotCards = document.querySelectorAll('.spot-card');
+
+spotMarkers.forEach(marker => {
+marker.addEventListener('mouseenter', function() {
+const spotId = this.dataset.spotId;
+const card = document.querySelector(`.spot-card[data-spot-id="${spotId}"]`);
+if (card) {
+card.classList.add('border-secondary');
+card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+});
+
+marker.addEventListener('mouseleave', function() {
+const spotId = this.dataset.spotId;
+const card = document.querySelector(`.spot-card[data-spot-id="${spotId}"]`);
+if (card) {
+card.classList.remove('border-secondary');
+}
+});
+});
+
+spotCards.forEach(card => {
+card.addEventListener('mouseenter', function() {
+const spotId = this.dataset.spotId;
+const marker = document.querySelector(`.spot-marker[data-spot-id="${spotId}"]`);
+if (marker) {
+marker.style.transform = 'translate(-50%, -50%) scale(1.3)';
+}
+});
+
+card.addEventListener('mouseleave', function() {
+const spotId = this.dataset.spotId;
+const marker = document.querySelector(`.spot-marker[data-spot-id="${spotId}"]`);
+if (marker) {
+marker.style.transform = 'translate(-50%, -50%) scale(1)';
+}
+});
+});
+});
+</script>
+
+<script id="reset-filters">
+document.addEventListener('DOMContentLoaded', function() {
+const resetBtn = document.getElementById('resetFilters');
+resetBtn.addEventListener('click', function() {
+document.getElementById('selectedFacilityType').textContent = 'すべて';
+document.getElementById('selectedDistanceRange').textContent = '3 km';
+});
+});
+</script>
+
+</body>
+</html>
